@@ -1,0 +1,911 @@
+/* =========================================================
+   BEST SELLER
+   PREMIUM / CLASSIC / MODERN FASHION UI
+   ========================================================= */
+
+.best-seller {
+  position: relative;
+  width: 100%;
+  margin-top: 90px;
+  padding: 20px 35px 100px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #faf9f6 0%,
+      #f5f1e9 48%,
+      #fbfaf7 100%
+    );
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   BACKGROUND CIRCLES
+   ========================================================= */
+
+.best-seller::before {
+  content: "";
+
+  position: absolute;
+
+  width: 520px;
+  height: 520px;
+
+  top: 60px;
+  left: -280px;
+
+  border: 1px solid
+    rgba(184, 155, 98, 0.10);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+.best-seller::after {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  right: -220px;
+  bottom: 20px;
+
+  border: 1px solid
+    rgba(184, 155, 98, 0.09);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.best-seller-header {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 850px;
+
+  margin: 0 auto 65px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   TITLE ROW
+   ========================================================= */
+
+.best-seller-heading-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   TITLE LINES
+   ========================================================= */
+
+.best-seller-heading-line {
+  width: 65px;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #b89b62
+    );
+
+  transition:
+    width 0.5s ease;
+}
+
+
+.best-seller-heading-row
+.best-seller-heading-line:last-child {
+  background:
+    linear-gradient(
+      90deg,
+      #b89b62,
+      transparent
+    );
+}
+
+
+.best-seller-heading-row:hover
+.best-seller-heading-line {
+  width: 90px;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.best-seller-title {
+  position: relative;
+
+  display: inline-block;
+
+  cursor: default;
+
+  transition:
+    transform 0.4s ease;
+}
+
+
+.best-seller-title:hover {
+  transform:
+    translateY(-3px);
+}
+
+
+/*
+   Styling Title component
+*/
+
+.best-seller-title p {
+  margin: 0;
+
+  color: #252320;
+
+  font-family:
+    "Prata",
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 34px;
+
+  font-weight: 400;
+
+  letter-spacing:
+    0.025em;
+
+  transition:
+    color 0.4s ease,
+    letter-spacing 0.4s ease;
+}
+
+
+.best-seller-title:hover p {
+  color: #a0834e;
+
+  letter-spacing:
+    0.06em;
+}
+
+
+/* =========================================================
+   GOLD DOT
+   ========================================================= */
+
+.best-seller-title::after {
+  content: "";
+
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  right: -13px;
+  top: 5px;
+
+  border-radius: 50%;
+
+  background: #c4a66b;
+
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+
+.best-seller-title:hover::after {
+  transform:
+    scale(1.4);
+
+  box-shadow:
+    0 0 15px
+    rgba(196, 166, 107, 0.5);
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.best-seller-description {
+  max-width: 680px;
+
+  margin:
+    25px auto 0;
+
+  color: #777169;
+
+  font-size: 13px;
+
+  line-height: 1.9;
+
+  letter-spacing:
+    0.025em;
+
+  transition:
+    color 0.35s ease;
+}
+
+
+.best-seller-description:hover {
+  color: #4c4841;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.best-seller-divider {
+  position: relative;
+
+  width: 75px;
+  height: 1px;
+
+  margin:
+    32px auto 0;
+
+  background: #292724;
+
+  transition:
+    width 0.5s ease;
+}
+
+
+.best-seller-divider::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: -2px;
+
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #b89b62;
+
+  transform:
+    translateX(-50%);
+}
+
+
+.best-seller-header:hover
+.best-seller-divider {
+  width: 120px;
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+   ========================================================= */
+
+.best-seller-products {
+  position: relative;
+
+  z-index: 3;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr);
+
+  gap: 18px;
+
+  max-width: 1380px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+   ========================================================= */
+
+.best-seller-product {
+  position: relative;
+
+  min-width: 0;
+
+  padding:
+    14px
+    14px
+    20px;
+
+  background:
+    rgba(255, 255, 255, 0.82);
+
+  border:
+    1px solid
+    rgba(48, 43, 36, 0.08);
+
+  box-shadow:
+    0 8px 30px
+    rgba(50, 43, 30, 0.04);
+
+  backdrop-filter:
+    blur(10px);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.5s
+      cubic-bezier(.22, 1, .36, 1),
+
+    box-shadow 0.5s ease,
+
+    border-color 0.4s ease,
+
+    background 0.4s ease;
+}
+
+
+/* =========================================================
+   TOP GOLD LINE
+   ========================================================= */
+
+.best-seller-product::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 0;
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #9f824d,
+      #dec58d
+    );
+
+  transition:
+    width 0.5s ease;
+}
+
+
+/* =========================================================
+   CORNER DETAIL
+   ========================================================= */
+
+.best-seller-product::after {
+  content: "";
+
+  position: absolute;
+
+  right: 10px;
+  top: 10px;
+
+  width: 24px;
+  height: 24px;
+
+  border-top:
+    1px solid
+    rgba(184, 155, 98, 0.35);
+
+  border-right:
+    1px solid
+    rgba(184, 155, 98, 0.35);
+
+  opacity: 0.6;
+
+  transition:
+    width 0.4s ease,
+    height 0.4s ease,
+    opacity 0.4s ease;
+}
+
+
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
+
+.best-seller-product:hover {
+  transform:
+    translateY(-10px);
+
+  background:
+    rgba(255, 255, 255, 0.97);
+
+  border-color:
+    rgba(184, 155, 98, 0.3);
+
+  box-shadow:
+    0 22px 50px
+    rgba(50, 43, 30, 0.12);
+}
+
+
+.best-seller-product:hover::before {
+  width: 100%;
+}
+
+
+.best-seller-product:hover::after {
+  width: 35px;
+  height: 35px;
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   PRODUCT NUMBER
+   ========================================================= */
+
+.best-seller-number {
+  position: absolute;
+
+  z-index: 10;
+
+  top: 15px;
+  left: 16px;
+
+  color:
+    rgba(35, 33, 29, 0.6);
+
+  font-family:
+    "Prata",
+    Georgia,
+    serif;
+
+  font-size: 13px;
+
+  letter-spacing:
+    0.08em;
+
+  transition:
+    color 0.4s ease,
+    transform 0.4s ease;
+}
+
+
+.best-seller-product:hover
+.best-seller-number {
+  color: #a0834e;
+
+  transform:
+    translateX(4px);
+}
+
+
+/* =========================================================
+   PRODUCT INNER
+   ========================================================= */
+
+.best-seller-product-inner {
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+   ========================================================= */
+
+.best-seller-product img {
+  display: block;
+
+  width: 100%;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.7s
+      cubic-bezier(.22, 1, .36, 1),
+
+    filter 0.5s ease;
+}
+
+
+.best-seller-product:hover img {
+  transform:
+    scale(1.05);
+
+  filter:
+    saturate(1.05)
+    contrast(1.02);
+}
+
+
+/* =========================================================
+   IMAGE DARK GRADIENT
+   ========================================================= */
+
+.best-seller-product-inner::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 65%,
+      rgba(25, 22, 18, 0.06)
+    );
+
+  opacity: 0;
+
+  transition:
+    opacity 0.4s ease;
+}
+
+
+.best-seller-product:hover
+.best-seller-product-inner::after {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   IMAGE SHINE ANIMATION
+   ========================================================= */
+
+.best-seller-product-inner::before {
+  content: "";
+
+  position: absolute;
+
+  z-index: 5;
+
+  top: 0;
+  left: -120%;
+
+  width: 55%;
+  height: 100%;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+
+  transform:
+    skewX(-18deg);
+
+  transition:
+    left 0.7s ease;
+}
+
+
+.best-seller-product:hover
+.best-seller-product-inner::before {
+  left: 140%;
+}
+
+
+/* =========================================================
+   PRODUCT TEXT
+   ========================================================= */
+
+.best-seller-product p {
+  transition:
+    color 0.35s ease,
+    transform 0.35s ease;
+}
+
+
+.best-seller-product:hover p {
+  transform:
+    translateX(2px);
+}
+
+
+/* Product Name */
+
+.best-seller-product-inner
+p:first-of-type {
+  color: #252321;
+
+  font-size: 14px;
+
+  line-height: 1.55;
+
+  transition:
+    color 0.35s ease;
+}
+
+
+.best-seller-product:hover
+p:first-of-type {
+  color: #9a7b47;
+}
+
+
+/* Price */
+
+.best-seller-product-inner
+p:last-of-type {
+  color: #393631;
+
+  font-weight: 600;
+
+  transition:
+    color 0.35s ease;
+}
+
+
+.best-seller-product:hover
+p:last-of-type {
+  color: #a0834e;
+}
+
+
+/* =========================================================
+   CARD ENTRANCE ANIMATION
+   ========================================================= */
+
+.best-seller-product {
+  opacity: 0;
+
+  animation:
+    productCardReveal
+    0.8s
+    cubic-bezier(.22, 1, .36, 1)
+    forwards;
+}
+
+
+.best-seller-product:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+
+.best-seller-product:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+
+.best-seller-product:nth-child(3) {
+  animation-delay: 0.19s;
+}
+
+
+.best-seller-product:nth-child(4) {
+  animation-delay: 0.26s;
+}
+
+
+.best-seller-product:nth-child(5) {
+  animation-delay: 0.33s;
+}
+
+
+@keyframes productCardReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   TITLE ANIMATION
+   ========================================================= */
+
+.best-seller-title {
+  animation:
+    bestTitleReveal
+    1s
+    cubic-bezier(.22, 1, .36, 1)
+    both;
+}
+
+
+@keyframes bestTitleReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .best-seller {
+    padding:
+      20px
+      25px
+      80px;
+  }
+
+
+  .best-seller-products {
+    grid-template-columns:
+      repeat(3, 1fr);
+
+    gap: 18px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .best-seller {
+    margin-top: 60px;
+
+    padding:
+      15px
+      16px
+      70px;
+  }
+
+
+  .best-seller-header {
+    margin-bottom: 45px;
+  }
+
+
+  .best-seller-heading-row {
+    gap: 12px;
+  }
+
+
+  .best-seller-heading-line {
+    width: 35px;
+  }
+
+
+  .best-seller-heading-row:hover
+  .best-seller-heading-line {
+    width: 45px;
+  }
+
+
+  .best-seller-title p {
+    font-size: 27px;
+  }
+
+
+  .best-seller-description {
+    max-width: 90%;
+
+    font-size: 11px;
+
+    line-height: 1.8;
+  }
+
+
+  .best-seller-products {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 13px;
+  }
+
+
+  .best-seller-product {
+    padding:
+      10px
+      10px
+      15px;
+  }
+
+
+  .best-seller-number {
+    top: 10px;
+    left: 11px;
+
+    font-size: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .best-seller-products {
+    gap: 10px;
+  }
+
+
+  .best-seller-title p {
+    font-size: 24px;
+  }
+
+
+  .best-seller-heading-line {
+    width: 25px;
+  }
+
+
+  .best-seller-description {
+    font-size: 10px;
+  }
+
+
+  .best-seller-product:hover {
+    transform:
+      translateY(-5px);
+  }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .best-seller-product,
+  .best-seller-title {
+    animation: none;
+  }
+
+}

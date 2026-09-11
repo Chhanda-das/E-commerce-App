@@ -1,0 +1,443 @@
+/* =========================================================
+   FOREVER — PREMIUM POLICY SECTION
+   ========================================================= */
+
+.our-policy {
+  position: relative;
+  width: 100%;
+  padding: 85px 6% 90px;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(205, 170, 100, 0.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(205, 170, 100, 0.06),
+      transparent 30%
+    ),
+    #f8f7f3;
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   DECORATIVE BACKGROUND
+   ========================================================= */
+
+.our-policy::before {
+  content: "";
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  border: 1px solid rgba(184, 148, 78, 0.12);
+  border-radius: 50%;
+  top: -220px;
+  right: -150px;
+  pointer-events: none;
+}
+
+.our-policy::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(184, 148, 78, 0.09);
+  border-radius: 50%;
+  bottom: -170px;
+  left: -120px;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.policy-heading {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.policy-heading-line {
+  width: 45px;
+  height: 1px;
+  background: #b99a5b;
+}
+
+.policy-eyebrow {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 4px;
+  color: #6d624e;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   MAIN TITLE
+   ========================================================= */
+
+.policy-title {
+  position: relative;
+  z-index: 2;
+
+  margin: 0;
+
+  text-align: center;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 4vw, 52px);
+
+  font-weight: 400;
+  line-height: 1.15;
+
+  letter-spacing: -1.5px;
+
+  color: #171717;
+}
+
+.policy-title span {
+  color: #a6874c;
+  font-style: italic;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.policy-subtitle {
+  position: relative;
+  z-index: 2;
+
+  max-width: 620px;
+
+  margin: 18px auto 55px;
+
+  text-align: center;
+
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+
+  line-height: 1.8;
+
+  color: #77736b;
+}
+
+
+/* =========================================================
+   POLICY CONTAINER
+   ========================================================= */
+
+.policy-container {
+  position: relative;
+  z-index: 2;
+
+  max-width: 1200px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   POLICY CARD
+   ========================================================= */
+
+.policy-card {
+  position: relative;
+
+  min-height: 265px;
+
+  padding: 38px 34px 32px;
+
+  background: rgba(255, 255, 255, 0.78);
+
+  border: 1px solid rgba(35, 35, 35, 0.08);
+
+  border-radius: 2px;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease,
+    border-color 0.45s ease,
+    background 0.45s ease;
+
+  box-shadow:
+    0 8px 25px rgba(20, 20, 20, 0.035);
+}
+
+
+/* Gold vertical accent */
+
+.policy-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 2px;
+  height: 0;
+
+  background: #b99a5b;
+
+  transition: height 0.45s ease;
+}
+
+
+/* Card Hover */
+
+.policy-card:hover {
+  transform: translateY(-8px);
+
+  background: #ffffff;
+
+  border-color: rgba(185, 154, 91, 0.32);
+
+  box-shadow:
+    0 20px 45px rgba(30, 25, 15, 0.09);
+}
+
+.policy-card:hover::before {
+  height: 100%;
+}
+
+
+/* =========================================================
+   NUMBER
+   ========================================================= */
+
+.policy-number {
+  position: absolute;
+
+  top: 20px;
+  right: 25px;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 13px;
+
+  letter-spacing: 2px;
+
+  color: #b39a69;
+
+  opacity: 0.85;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.policy-icon-wrapper {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 25px;
+
+  border: 1px solid rgba(185, 154, 91, 0.35);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(185, 154, 91, 0.10),
+      transparent 70%
+    );
+
+  transition:
+    transform 0.45s ease,
+    background 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.policy-card:hover .policy-icon-wrapper {
+  transform: translateY(-3px) rotate(3deg);
+
+  border-color: #b99a5b;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(185, 154, 91, 0.18),
+      transparent 70%
+    );
+}
+
+
+.policy-icon {
+  width: 32px;
+  height: 32px;
+
+  object-fit: contain;
+
+  opacity: 0.78;
+
+  transition:
+    transform 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.policy-card:hover .policy-icon {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+
+/* =========================================================
+   CARD CONTENT
+   ========================================================= */
+
+.policy-content {
+  max-width: 280px;
+}
+
+.policy-card-title {
+  margin: 0 0 10px;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 22px;
+
+  font-weight: 400;
+
+  color: #242424;
+
+  letter-spacing: -0.3px;
+
+  transition: color 0.35s ease;
+}
+
+.policy-card:hover .policy-card-title {
+  color: #a6874c;
+}
+
+
+.policy-card-description {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.75;
+
+  color: #85817a;
+}
+
+
+/* =========================================================
+   BOTTOM CARD LINE
+   ========================================================= */
+
+.policy-card-line {
+  position: absolute;
+
+  left: 34px;
+  bottom: 25px;
+
+  width: 35px;
+  height: 1px;
+
+  background: #c2a66c;
+
+  transition:
+    width 0.45s ease;
+}
+
+.policy-card:hover .policy-card-line {
+  width: 75px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .our-policy {
+    padding: 70px 5%;
+  }
+
+  .policy-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .our-policy {
+    padding: 65px 20px;
+  }
+
+  .policy-heading {
+    gap: 10px;
+  }
+
+  .policy-heading-line {
+    width: 28px;
+  }
+
+  .policy-eyebrow {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+  }
+
+  .policy-title {
+    font-size: 34px;
+    letter-spacing: -1px;
+  }
+
+  .policy-subtitle {
+    font-size: 13px;
+    margin-bottom: 38px;
+  }
+
+  .policy-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .policy-card {
+    min-height: 235px;
+    padding: 32px 28px 30px;
+  }
+
+  .policy-card-title {
+    font-size: 21px;
+  }
+
+}

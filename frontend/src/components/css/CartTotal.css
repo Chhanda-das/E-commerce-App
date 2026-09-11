@@ -1,0 +1,632 @@
+/* =========================================================
+   CART TOTAL
+   PREMIUM FASHION / E-COMMERCE UI
+   ========================================================= */
+
+.cart-total {
+  position: relative;
+
+  width: 100%;
+
+  padding: 32px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #faf8f3 100%
+    );
+
+  border: 1px solid
+    rgba(45, 42, 37, 0.09);
+
+  box-shadow:
+    0 18px 55px
+    rgba(35, 31, 24, 0.08);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+
+/* =========================================================
+   SUBTLE GOLD TOP ACCENT
+   ========================================================= */
+
+.cart-total::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      #b89b62 25%,
+      #dfc98f 50%,
+      #b89b62 75%,
+      transparent 100%
+    );
+}
+
+
+/* =========================================================
+   BACKGROUND CIRCLE
+   ========================================================= */
+
+.cart-total::after {
+  content: "";
+
+  position: absolute;
+
+  width: 260px;
+  height: 260px;
+
+  right: -150px;
+  top: -150px;
+
+  border: 1px solid
+    rgba(184, 155, 98, 0.10);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.cart-total-header {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.cart-total-title {
+  position: relative;
+
+  transition:
+    transform 0.35s ease;
+}
+
+
+.cart-total-title:hover {
+  transform:
+    translateX(3px);
+}
+
+
+/*
+   Works with the existing Title component
+*/
+
+.cart-total-title p {
+  margin: 0;
+
+  color: #242321;
+
+  font-family:
+    "Prata",
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 25px;
+
+  font-weight: 400;
+
+  letter-spacing:
+    0.025em;
+
+  transition:
+    color 0.35s ease,
+    letter-spacing 0.35s ease;
+}
+
+
+.cart-total-title:hover p {
+  color: #a0834e;
+
+  letter-spacing:
+    0.045em;
+}
+
+
+/* =========================================================
+   HEADER LINE
+   ========================================================= */
+
+.cart-total-header-line {
+  width: 55px;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #b89b62,
+      transparent
+    );
+
+  transition:
+    width 0.4s ease;
+}
+
+
+.cart-total-header:hover
+.cart-total-header-line {
+  width: 85px;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.cart-total-summary {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0;
+}
+
+
+/* =========================================================
+   ROW
+   ========================================================= */
+
+.cart-total-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  min-height: 52px;
+
+  transition:
+    padding 0.35s ease;
+}
+
+
+.cart-total-row:hover {
+  padding:
+    0 5px;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.cart-total-label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.cart-total-label p {
+  margin: 0;
+
+  color: #77736c;
+
+  font-size: 13px;
+
+  font-weight: 400;
+
+  letter-spacing:
+    0.025em;
+
+  transition:
+    color 0.3s ease;
+}
+
+
+.cart-total-row:hover
+.cart-total-label p {
+  color: #383530;
+}
+
+
+/* =========================================================
+   GOLD DOT
+   ========================================================= */
+
+.cart-total-dot {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background:
+    #b89b62;
+
+  opacity: 0.7;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+
+.cart-total-row:hover
+.cart-total-dot {
+  transform:
+    scale(1.6);
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   PRICE
+   ========================================================= */
+
+.cart-total-price {
+  margin: 0;
+
+  color: #2d2a26;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  letter-spacing:
+    0.02em;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.cart-total-row:hover
+.cart-total-price {
+  color: #9b7d49;
+
+  transform:
+    translateX(-3px);
+}
+
+
+/* =========================================================
+   SEPARATOR
+   ========================================================= */
+
+.cart-total-separator {
+  width: 100%;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(45, 42, 37, 0.08),
+      rgba(184, 155, 98, 0.20),
+      rgba(45, 42, 37, 0.08)
+    );
+}
+
+
+/* =========================================================
+   FINAL TOTAL
+   ========================================================= */
+
+.cart-total-final {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 20px;
+
+  padding:
+    20px 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f5f0e6,
+      #fbfaf7
+    );
+
+  border:
+    1px solid
+    rgba(184, 155, 98, 0.18);
+
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+
+.cart-total-final:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(184, 155, 98, 0.38);
+
+  box-shadow:
+    0 10px 30px
+    rgba(70, 58, 39, 0.07);
+}
+
+
+/* =========================================================
+   FINAL LABEL
+   ========================================================= */
+
+.cart-total-final-label {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.cart-total-small-label {
+  color:
+    #a0834e;
+
+  font-size: 8px;
+
+  font-weight: 600;
+
+  letter-spacing:
+    0.18em;
+}
+
+
+.cart-total-final-label b {
+  color:
+    #24221f;
+
+  font-family:
+    "Prata",
+    Georgia,
+    serif;
+
+  font-size: 17px;
+
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   FINAL PRICE
+   ========================================================= */
+
+.cart-total-final-price {
+  color:
+    #25231f;
+
+  font-family:
+    "Prata",
+    Georgia,
+    serif;
+
+  font-size: 22px;
+
+  font-weight: 400;
+
+  letter-spacing:
+    0.015em;
+
+  transition:
+    color 0.35s ease,
+    transform 0.35s ease;
+}
+
+
+.cart-total-final:hover
+.cart-total-final-price {
+  color:
+    #9b7d49;
+
+  transform:
+    scale(1.04);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.cart-total-footer {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 22px;
+
+  padding-top: 18px;
+
+  border-top:
+    1px solid
+    rgba(45, 42, 37, 0.06);
+}
+
+
+.cart-total-footer p {
+  margin: 0;
+
+  color: #96918a;
+
+  font-size: 9px;
+
+  letter-spacing:
+    0.04em;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   FOOTER ICON
+   ========================================================= */
+
+.cart-total-footer-icon {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 17px;
+  height: 17px;
+
+  border-radius: 50%;
+
+  color: white;
+
+  background:
+    #a0834e;
+
+  font-size: 9px;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+
+.cart-total-footer:hover
+.cart-total-footer-icon {
+  transform:
+    scale(1.15);
+
+  box-shadow:
+    0 0 12px
+    rgba(160, 131, 78, 0.3);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .cart-total {
+    padding: 26px;
+  }
+
+
+  .cart-total-title p {
+    font-size: 23px;
+  }
+
+
+  .cart-total-final-price {
+    font-size: 20px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .cart-total {
+    padding: 22px;
+  }
+
+
+  .cart-total-header {
+    margin-bottom: 22px;
+  }
+
+
+  .cart-total-title p {
+    font-size: 21px;
+  }
+
+
+  .cart-total-header-line {
+    width: 35px;
+  }
+
+
+  .cart-total-row {
+    min-height: 48px;
+  }
+
+
+  .cart-total-label p {
+    font-size: 12px;
+  }
+
+
+  .cart-total-price {
+    font-size: 13px;
+  }
+
+
+  .cart-total-final {
+    padding:
+      17px 14px;
+  }
+
+
+  .cart-total-final-label b {
+    font-size: 15px;
+  }
+
+
+  .cart-total-final-price {
+    font-size: 18px;
+  }
+
+
+  .cart-total-footer p {
+    font-size: 8px;
+  }
+
+}
