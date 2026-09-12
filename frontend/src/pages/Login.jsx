@@ -6,7 +6,7 @@ import "../components/css/Login.css";
 const Login = () => {
     const navigate = useNavigate();
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -139,9 +139,11 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 await axios.post(
                     `${backendUrl}/api/user/login`,
                     {
-                        email:
-                            email.trim(),
+                        email: email.trim(),
                         password,
+                    },
+                    {
+                        withCredentials: true,
                     }
                 );
 
@@ -157,7 +159,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
             if (!response.data.success) {
                 setError(
                     response.data.message ||
-                        "Login failed."
+                    "Login failed."
                 );
 
                 return;
@@ -203,7 +205,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
             if (err.response) {
                 setError(
                     err.response.data?.message ||
-                        "Login failed."
+                    "Login failed."
                 );
             } else {
                 setError(
@@ -430,7 +432,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
                                     <span
                                         className={
                                             password.length >=
-                                            8
+                                                8
                                                 ? passwordStrength.className
                                                 : ""
                                         }
@@ -491,7 +493,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
                         <div
                             className={
                                 password.length >=
-                                8
+                                    8
                                     ? "rule valid"
                                     : "rule"
                             }
