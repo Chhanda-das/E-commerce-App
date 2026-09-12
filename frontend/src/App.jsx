@@ -16,8 +16,10 @@ import PlaceOrder from "./pages/PlaceOrder";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import TrackOrder from "./pages/TrackOrder";
 import Verify from "./pages/Verify";
+
 const App = () => {
     return (
         <>
@@ -89,7 +91,8 @@ const App = () => {
                     path="/login"
                     element={<Login />}
                 />
-
+                {/* Register */}
+                <Route path="/register" element={<Register />} />
             </Routes>
 
             <Footer />

@@ -6,7 +6,7 @@ import "../components/css/Login.css";
 const Login = () => {
     const navigate = useNavigate();
 
-    const backendUrl = "http://localhost:5000";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
