@@ -1,6 +1,5 @@
 import React, { useContext, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-
 import { ShopContext } from "../context/ShopContext";
 
 // =====================================================
@@ -15,7 +14,6 @@ const imageFiles = import.meta.glob(
         import: "default",
     }
 );
-
 
 // =====================================================
 // GET IMAGE
@@ -34,9 +32,10 @@ const getImage = (fileName) => {
             exactPath.toLowerCase()
     );
 
-    return foundPath ? imageFiles[foundPath] : "";
+    return foundPath
+        ? imageFiles[foundPath]
+        : "";
 };
-
 
 // =====================================================
 // FOOTWEAR PRODUCTS
@@ -51,7 +50,6 @@ const footwearProducts = [
         category: "Sneakers",
         image: getImage("f1.jpg"),
     },
-
     {
         id: "f2",
         name: "Minimal White Sneakers",
@@ -60,7 +58,6 @@ const footwearProducts = [
         category: "Sneakers",
         image: getImage("f2.jpg"),
     },
-
     {
         id: "f3",
         name: "Everyday Casual Shoes",
@@ -69,7 +66,6 @@ const footwearProducts = [
         category: "Shoes",
         image: getImage("f3.jpg"),
     },
-
     {
         id: "f4",
         name: "Premium Running Shoes",
@@ -78,7 +74,6 @@ const footwearProducts = [
         category: "Running Shoes",
         image: getImage("f4.jpg"),
     },
-
     {
         id: "f5",
         name: "Classic Black Shoes",
@@ -87,7 +82,6 @@ const footwearProducts = [
         category: "Shoes",
         image: getImage("f5.jpg"),
     },
-
     {
         id: "f6",
         name: "Modern Lifestyle Sneakers",
@@ -96,7 +90,6 @@ const footwearProducts = [
         category: "Lifestyle Shoes",
         image: getImage("f6.jpg"),
     },
-
     {
         id: "f7",
         name: "Comfort Sandals",
@@ -105,7 +98,6 @@ const footwearProducts = [
         category: "Sandals",
         image: getImage("f7.jpg"),
     },
-
     {
         id: "f8",
         name: "Premium Casual Sneakers",
@@ -114,7 +106,6 @@ const footwearProducts = [
         category: "Sneakers",
         image: getImage("f8.jpg"),
     },
-
     {
         id: "f9",
         name: "Classic Formal Shoes",
@@ -123,7 +114,6 @@ const footwearProducts = [
         category: "Shoes",
         image: getImage("f9.jpg"),
     },
-
     {
         id: "f10",
         name: "Urban Street Sneakers",
@@ -132,7 +122,6 @@ const footwearProducts = [
         category: "Sneakers",
         image: getImage("f10.jpg"),
     },
-
     {
         id: "f11",
         name: "Lightweight Running Shoes",
@@ -141,7 +130,6 @@ const footwearProducts = [
         category: "Running Shoes",
         image: getImage("f11.jpg"),
     },
-
     {
         id: "f12",
         name: "Comfort Everyday Sandals",
@@ -150,7 +138,6 @@ const footwearProducts = [
         category: "Sandals",
         image: getImage("f12.jpg"),
     },
-
     {
         id: "f13",
         name: "Classic Chelsea Boots",
@@ -159,7 +146,6 @@ const footwearProducts = [
         category: "Boots",
         image: getImage("f13.jpg"),
     },
-
     {
         id: "f14",
         name: "Premium Leather Boots",
@@ -168,7 +154,6 @@ const footwearProducts = [
         category: "Boots",
         image: getImage("f14.jpg"),
     },
-
     {
         id: "f15",
         name: "Modern Heels",
@@ -177,7 +162,6 @@ const footwearProducts = [
         category: "Heels",
         image: getImage("f15.jpg"),
     },
-
     {
         id: "f16",
         name: "Elegant Classic Heels",
@@ -186,7 +170,6 @@ const footwearProducts = [
         category: "Heels",
         image: getImage("f16.jpg"),
     },
-
     {
         id: "f17",
         name: "Soft Comfort Slippers",
@@ -195,7 +178,6 @@ const footwearProducts = [
         category: "Slippers",
         image: getImage("f17.jpg"),
     },
-
     {
         id: "f18",
         name: "Premium Home Slippers",
@@ -204,7 +186,6 @@ const footwearProducts = [
         category: "Slippers",
         image: getImage("f18.jpg"),
     },
-
     {
         id: "f19",
         name: "Sport Lifestyle Shoes",
@@ -213,7 +194,6 @@ const footwearProducts = [
         category: "Lifestyle Shoes",
         image: getImage("f19.jpg"),
     },
-
     {
         id: "f20",
         name: "Classic Everyday Sneakers",
@@ -222,7 +202,6 @@ const footwearProducts = [
         category: "Sneakers",
         image: getImage("f20.jpg"),
     },
-
     {
         id: "f21",
         name: "Performance Running Shoes",
@@ -231,7 +210,6 @@ const footwearProducts = [
         category: "Running Shoes",
         image: getImage("f21.jpg"),
     },
-
     {
         id: "f22",
         name: "Premium Lifestyle Shoes",
@@ -241,7 +219,6 @@ const footwearProducts = [
         image: getImage("f22.jpg"),
     },
 ];
-
 
 // =====================================================
 // CATEGORIES
@@ -259,18 +236,27 @@ const categories = [
     "Lifestyle Shoes",
 ];
 
+// =====================================================
+// NORMALIZE TEXT
+// =====================================================
+
+const normalizeText = (value) => {
+    return String(value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim()
+        .replace(/\s+/g, " ");
+};
 
 // =====================================================
 // COMPONENT
 // =====================================================
 
 const Footwear = () => {
-
     const {
         products,
         addToCart,
     } = useContext(ShopContext);
-
 
     const [activeCategory, setActiveCategory] =
         useState("All");
@@ -278,35 +264,126 @@ const Footwear = () => {
     const [search, setSearch] =
         useState("");
 
-
     // =================================================
     // FIND REAL BACKEND PRODUCT
     // =================================================
 
     const findRealProduct = (footwearProduct) => {
-
-        if (!products || !Array.isArray(products)) {
+        if (
+            !Array.isArray(products) ||
+            products.length === 0
+        ) {
             return null;
         }
 
-        const footwearName =
-            footwearProduct.name
-                .trim()
-                .toLowerCase();
+        const localName =
+            normalizeText(
+                footwearProduct.name
+            );
 
-        return products.find(
-            (product) => {
+        // ---------------------------------------------
+        // EXACT NAME MATCH
+        // ---------------------------------------------
 
-                const productName =
-                    String(product.name || "")
-                        .trim()
-                        .toLowerCase();
-
-                return productName === footwearName;
-            }
+        const exactMatch = products.find(
+            (product) =>
+                normalizeText(product?.name) ===
+                localName
         );
-    };
 
+        if (exactMatch) {
+            return exactMatch;
+        }
+
+        // ---------------------------------------------
+        // PARTIAL/TOKEN MATCH
+        // ---------------------------------------------
+
+        const localWords = localName
+            .split(" ")
+            .filter(
+                (word) => word.length >= 3
+            );
+
+        let bestProduct = null;
+        let bestScore = 0;
+
+        products.forEach((product) => {
+            const backendName =
+                normalizeText(
+                    product?.name
+                );
+
+            if (!backendName) {
+                return;
+            }
+
+            const backendWords =
+                backendName.split(" ");
+
+            let score = 0;
+
+            localWords.forEach((word) => {
+                const found = backendWords.some(
+                    (backendWord) =>
+                        backendWord.includes(word) ||
+                        word.includes(backendWord)
+                );
+
+                if (found) {
+                    score++;
+                }
+            });
+
+            // Price similarity
+            const localPrice =
+                Number(
+                    footwearProduct.price
+                );
+
+            const backendPrice =
+                Number(
+                    product?.price
+                );
+
+            if (
+                localPrice > 0 &&
+                backendPrice > 0
+            ) {
+                const difference =
+                    Math.abs(
+                        localPrice -
+                        backendPrice
+                    );
+
+                if (
+                    difference <=
+                    Math.max(
+                        localPrice * 0.25,
+                        500
+                    )
+                ) {
+                    score++;
+                }
+            }
+
+            if (
+                score > bestScore
+            ) {
+                bestScore = score;
+                bestProduct = product;
+            }
+        });
+
+        if (
+            bestProduct &&
+            bestScore >= 2
+        ) {
+            return bestProduct;
+        }
+
+        return null;
+    };
 
     // =================================================
     // ADD TO CART
@@ -316,254 +393,316 @@ const Footwear = () => {
         event,
         footwearProduct
     ) => {
-
         event.preventDefault();
         event.stopPropagation();
 
-
         const realProduct =
-            findRealProduct(footwearProduct);
-
-
-        if (!realProduct) {
-
-            alert(
-                "This footwear product is not available in the product database."
+            findRealProduct(
+                footwearProduct
             );
 
+        console.log(
+            "FOOTWEAR PRODUCT:",
+            footwearProduct
+        );
+
+        console.log(
+            "MATCHED BACKEND PRODUCT:",
+            realProduct
+        );
+
+        if (!realProduct) {
+            alert(
+                "This footwear product is not linked to a product in the database."
+            );
             return;
         }
 
+        if (!realProduct._id) {
+            console.error(
+                "Backend product has no _id:",
+                realProduct
+            );
+            return;
+        }
 
         // ---------------------------------------------
-        // GET SIZE FROM BACKEND PRODUCT
+        // GET SIZE
         // ---------------------------------------------
 
         let selectedSize = "Default";
 
-
         if (
-            Array.isArray(realProduct.sizes) &&
+            Array.isArray(
+                realProduct.sizes
+            ) &&
             realProduct.sizes.length > 0
         ) {
             selectedSize =
                 realProduct.sizes[0];
-        }
-
-        else if (
-            Array.isArray(realProduct.size) &&
+        } else if (
+            Array.isArray(
+                realProduct.size
+            ) &&
             realProduct.size.length > 0
         ) {
             selectedSize =
                 realProduct.size[0];
-        }
-
-        else if (
-            typeof realProduct.size === "string" &&
+        } else if (
+            typeof realProduct.size ===
+                "string" &&
             realProduct.size.trim() !== ""
         ) {
             selectedSize =
                 realProduct.size;
         }
 
-
         // ---------------------------------------------
-        // EXISTING CART SYSTEM
+        // ADD TO CART
         // ---------------------------------------------
 
         try {
+            console.log(
+                "ADDING FOOTWEAR TO CART:",
+                {
+                    productId:
+                        realProduct._id,
+                    size: selectedSize,
+                }
+            );
 
             await addToCart(
                 realProduct._id,
                 selectedSize
             );
 
-        } catch (error) {
-
-            console.error(
-                "Add footwear to cart error:",
-                error
+            console.log(
+                "FOOTWEAR ADDED TO CART SUCCESSFULLY"
             );
 
+        } catch (error) {
+            console.error(
+                "ADD FOOTWEAR TO CART ERROR:",
+                error
+            );
         }
-
     };
 
-
     // =================================================
-    // FILTER
+    // FILTER PRODUCTS
     // =================================================
 
     const filteredProducts = useMemo(() => {
-
         const searchText =
-            search.trim().toLowerCase();
+            search
+                .trim()
+                .toLowerCase();
 
         return footwearProducts.filter(
             (product) => {
-
                 const categoryMatch =
                     activeCategory === "All" ||
-                    product.category === activeCategory;
+                    product.category ===
+                        activeCategory;
 
                 const searchMatch =
                     product.name
                         .toLowerCase()
-                        .includes(searchText);
+                        .includes(
+                            searchText
+                        );
 
                 return (
                     categoryMatch &&
                     searchMatch &&
                     product.image
                 );
-
             }
         );
-
-    }, [activeCategory, search]);
-
+    }, [
+        activeCategory,
+        search,
+    ]);
 
     // =================================================
-    // PRICE
+    // PRODUCT LINK
+    // =================================================
+
+    const getProductLink = (
+        footwearProduct
+    ) => {
+        const realProduct =
+            findRealProduct(
+                footwearProduct
+            );
+
+        if (realProduct?._id) {
+            return `/product/${realProduct._id}`;
+        }
+
+        return "/collection";
+    };
+
+    // =================================================
+    // PRICE FORMAT
     // =================================================
 
     const formatPrice = (price) => {
-
         return Number(price).toLocaleString(
             "en-IN"
         );
-
     };
-
 
     // =================================================
     // JSX
     // =================================================
 
     return (
-
         <section className="w-full">
 
             {/* =========================================
                 HEADER
             ========================================= */}
 
-            <div className="
-                px-5
-                sm:px-8
-                lg:px-12
-                pt-10
-                sm:pt-14
-                pb-8
-            ">
+            <div
+                className="
+                    px-5
+                    sm:px-8
+                    lg:px-12
+                    pt-10
+                    sm:pt-14
+                    pb-8
+                "
+            >
+                <div
+                    className="
+                        max-w-7xl
+                        mx-auto
+                    "
+                >
 
-                <div className="max-w-7xl mx-auto">
-
-                    <p className="
-                        text-xs
-                        uppercase
-                        tracking-[0.3em]
-                        text-gray-400
-                        mb-3
-                    ">
+                    <p
+                        className="
+                            text-xs
+                            uppercase
+                            tracking-[0.3em]
+                            text-gray-400
+                            mb-3
+                        "
+                    >
                         FOREVER COLLECTION
                     </p>
 
-
-                    <div className="
-                        flex
-                        flex-col
-                        md:flex-row
-                        md:items-end
-                        md:justify-between
-                        gap-5
-                    ">
+                    <div
+                        className="
+                            flex
+                            flex-col
+                            md:flex-row
+                            md:items-end
+                            md:justify-between
+                            gap-5
+                        "
+                    >
 
                         <div>
 
-                            <h1 className="
-                                text-4xl
-                                sm:text-5xl
-                                lg:text-6xl
-                                font-light
-                                tracking-tight
-                                text-gray-900
-                            ">
+                            <h1
+                                className="
+                                    text-4xl
+                                    sm:text-5xl
+                                    lg:text-6xl
+                                    font-light
+                                    tracking-tight
+                                    text-gray-900
+                                "
+                            >
                                 Footwear
                             </h1>
 
-
-                            <p className="
-                                mt-4
-                                max-w-xl
-                                text-sm
-                                sm:text-base
-                                leading-7
-                                text-gray-500
-                            ">
-                                Discover timeless footwear designed
-                                for everyday living, comfort, and
+                            <p
+                                className="
+                                    mt-4
+                                    max-w-xl
+                                    text-sm
+                                    sm:text-base
+                                    leading-7
+                                    text-gray-500
+                                "
+                            >
+                                Discover timeless
+                                footwear designed
+                                for everyday living,
+                                comfort, and
                                 effortless style.
                             </p>
 
                         </div>
 
-
-                        <p className="
-                            text-sm
-                            text-gray-400
-                        ">
-                            {filteredProducts.length} Products
+                        <p
+                            className="
+                                text-sm
+                                text-gray-400
+                            "
+                        >
+                            {filteredProducts.length}
+                            {" "}
+                            Products
                         </p>
 
                     </div>
 
                 </div>
-
             </div>
-
 
             {/* =========================================
                 SEARCH + FILTER
             ========================================= */}
 
-            <div className="
-                px-5
-                sm:px-8
-                lg:px-12
-                pb-8
-            ">
-
-                <div className="
-                    max-w-7xl
-                    mx-auto
-                    border-y
-                    border-gray-200
-                    py-5
-                ">
-
-                    <div className="
-                        flex
-                        flex-col
-                        lg:flex-row
-                        lg:items-center
-                        lg:justify-between
-                        gap-5
-                    ">
+            <div
+                className="
+                    px-5
+                    sm:px-8
+                    lg:px-12
+                    pb-8
+                "
+            >
+                <div
+                    className="
+                        max-w-7xl
+                        mx-auto
+                        border-y
+                        border-gray-200
+                        py-5
+                    "
+                >
+                    <div
+                        className="
+                            flex
+                            flex-col
+                            lg:flex-row
+                            lg:items-center
+                            lg:justify-between
+                            gap-5
+                        "
+                    >
 
                         {/* SEARCH */}
 
-                        <div className="
-                            relative
-                            w-full
-                            lg:max-w-xs
-                        ">
+                        <div
+                            className="
+                                relative
+                                w-full
+                                lg:max-w-xs
+                            "
+                        >
 
                             <input
                                 type="text"
                                 value={search}
                                 onChange={(e) =>
-                                    setSearch(e.target.value)
+                                    setSearch(
+                                        e.target.value
+                                    )
                                 }
                                 placeholder="Search footwear"
                                 className="
@@ -581,31 +720,32 @@ const Footwear = () => {
                                 "
                             />
 
-                            <span className="
-                                absolute
-                                right-0
-                                top-1/2
-                                -translate-y-1/2
-                                text-gray-400
-                            ">
+                            <span
+                                className="
+                                    absolute
+                                    right-0
+                                    top-1/2
+                                    -translate-y-1/2
+                                    text-gray-400
+                                "
+                            >
                                 ⌕
                             </span>
 
                         </div>
 
-
                         {/* CATEGORIES */}
 
-                        <div className="
-                            flex
-                            gap-2
-                            overflow-x-auto
-                            pb-1
-                        ">
-
+                        <div
+                            className="
+                                flex
+                                gap-2
+                                overflow-x-auto
+                                pb-1
+                            "
+                        >
                             {categories.map(
                                 (category) => (
-
                                     <button
                                         key={category}
                                         type="button"
@@ -633,73 +773,82 @@ const Footwear = () => {
                                     >
                                         {category}
                                     </button>
-
                                 )
                             )}
-
                         </div>
 
                     </div>
-
                 </div>
-
             </div>
-
 
             {/* =========================================
                 PRODUCTS
             ========================================= */}
 
-            <div className="
-                px-5
-                sm:px-8
-                lg:px-12
-                pb-16
-            ">
-
-                <div className="
-                    max-w-7xl
-                    mx-auto
-                ">
+            <div
+                className="
+                    px-5
+                    sm:px-8
+                    lg:px-12
+                    pb-16
+                "
+            >
+                <div
+                    className="
+                        max-w-7xl
+                        mx-auto
+                    "
+                >
 
                     {filteredProducts.length === 0 ? (
 
-                        <div className="
-                            min-h-[300px]
-                            flex
-                            flex-col
-                            items-center
-                            justify-center
-                            text-center
-                        ">
+                        <div
+                            className="
+                                min-h-[300px]
+                                flex
+                                flex-col
+                                items-center
+                                justify-center
+                                text-center
+                            "
+                        >
 
-                            <p className="
-                                text-4xl
-                                mb-4
-                            ">
+                            <p
+                                className="
+                                    text-4xl
+                                    mb-4
+                                "
+                            >
                                 ⌕
                             </p>
 
-                            <h2 className="
-                                text-xl
-                                font-medium
-                            ">
+                            <h2
+                                className="
+                                    text-xl
+                                    font-medium
+                                "
+                            >
                                 No footwear found
                             </h2>
 
-                            <p className="
-                                text-sm
-                                text-gray-500
-                                mt-2
-                            ">
-                                Try another search or category.
+                            <p
+                                className="
+                                    text-sm
+                                    text-gray-500
+                                    mt-2
+                                "
+                            >
+                                Try another
+                                search or category.
                             </p>
 
                             <button
                                 type="button"
                                 onClick={() => {
                                     setSearch("");
-                                    setActiveCategory("All");
+                                    setActiveCategory(
+                                        "All"
+                                    );
                                 }}
                                 className="
                                     mt-5
@@ -715,189 +864,232 @@ const Footwear = () => {
 
                     ) : (
 
-                        <div className="
-                            grid
-                            grid-cols-2
-                            md:grid-cols-3
-                            lg:grid-cols-4
-                            gap-x-4
-                            sm:gap-x-6
-                            gap-y-10
-                        ">
+                        <div
+                            className="
+                                grid
+                                grid-cols-2
+                                md:grid-cols-3
+                                lg:grid-cols-4
+                                gap-x-4
+                                sm:gap-x-6
+                                gap-y-10
+                            "
+                        >
 
                             {filteredProducts.map(
-                                (product) => (
+                                (product) => {
 
-                                    <div
-                                        key={product.id}
-                                        className="group block"
-                                    >
+                                    const realProduct =
+                                        findRealProduct(
+                                            product
+                                        );
 
-                                        {/* =================================
-                                            PRODUCT IMAGE
-                                        ================================= */}
-
-                                        <Link
-                                            to={`/product/${product.id}`}
-                                            className="block"
+                                    return (
+                                        <div
+                                            key={
+                                                product.id
+                                            }
+                                            className="
+                                                group
+                                                block
+                                            "
                                         >
 
-                                            <div className="
-                                                relative
-                                                overflow-hidden
-                                                bg-[#f5f5f3]
-                                                aspect-[3/4]
-                                            ">
+                                            {/* PRODUCT IMAGE */}
 
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    loading="lazy"
+                                            <Link
+                                                to={getProductLink(
+                                                    product
+                                                )}
+                                                className="block"
+                                            >
+
+                                                <div
                                                     className="
-                                                        w-full
-                                                        h-full
-                                                        object-cover
-                                                        transition
-                                                        duration-700
-                                                        ease-out
-                                                        group-hover:scale-105
+                                                        relative
+                                                        overflow-hidden
+                                                        bg-[#f5f5f3]
+                                                        aspect-[3/4]
                                                     "
-                                                />
+                                                >
 
+                                                    <img
+                                                        src={
+                                                            product.image
+                                                        }
+                                                        alt={
+                                                            product.name
+                                                        }
+                                                        loading="lazy"
+                                                        className="
+                                                            w-full
+                                                            h-full
+                                                            object-cover
+                                                            transition
+                                                            duration-700
+                                                            ease-out
+                                                            group-hover:scale-105
+                                                        "
+                                                    />
 
-                                                <div className="
-                                                    absolute
-                                                    inset-x-0
-                                                    bottom-0
-                                                    translate-y-full
-                                                    group-hover:translate-y-0
-                                                    transition
-                                                    duration-300
-                                                ">
+                                                    <div
+                                                        className="
+                                                            absolute
+                                                            inset-x-0
+                                                            bottom-0
+                                                            translate-y-full
+                                                            group-hover:translate-y-0
+                                                            transition
+                                                            duration-300
+                                                        "
+                                                    >
 
-                                                    <div className="
-                                                        bg-black
-                                                        text-white
-                                                        text-center
-                                                        py-3
-                                                        text-xs
-                                                        tracking-[0.15em]
-                                                        uppercase
-                                                    ">
-                                                        View Product
+                                                        <div
+                                                            className="
+                                                                bg-black
+                                                                text-white
+                                                                text-center
+                                                                py-3
+                                                                text-xs
+                                                                tracking-[0.15em]
+                                                                uppercase
+                                                            "
+                                                        >
+                                                            View Product
+                                                        </div>
+
                                                     </div>
 
                                                 </div>
 
-                                            </div>
-
-                                        </Link>
-
-
-                                        {/* =================================
-                                            PRODUCT INFO
-                                        ================================= */}
-
-                                        <div className="pt-4">
-
-                                            <p className="
-                                                text-[10px]
-                                                uppercase
-                                                tracking-[0.18em]
-                                                text-gray-400
-                                                mb-2
-                                            ">
-                                                {product.category}
-                                            </p>
-
-
-                                            <Link
-                                                to={`/product/${product.id}`}
-                                            >
-
-                                                <h2 className="
-                                                    text-sm
-                                                    sm:text-base
-                                                    font-normal
-                                                    text-gray-900
-                                                    leading-6
-                                                    hover:underline
-                                                    underline-offset-4
-                                                ">
-                                                    {product.name}
-                                                </h2>
-
                                             </Link>
 
+                                            {/* PRODUCT INFO */}
 
-                                            <div className="
-                                                flex
-                                                items-center
-                                                gap-2
-                                                mt-2
-                                            ">
+                                            <div className="pt-4">
 
-                                                <span className="
-                                                    text-sm
-                                                    font-medium
-                                                ">
-                                                    ₹
-                                                    {formatPrice(
-                                                        product.price
+                                                <p
+                                                    className="
+                                                        text-[10px]
+                                                        uppercase
+                                                        tracking-[0.18em]
+                                                        text-gray-400
+                                                        mb-2
+                                                    "
+                                                >
+                                                    {
+                                                        product.category
+                                                    }
+                                                </p>
+
+                                                <Link
+                                                    to={getProductLink(
+                                                        product
                                                     )}
-                                                </span>
+                                                >
 
+                                                    <h2
+                                                        className="
+                                                            text-sm
+                                                            sm:text-base
+                                                            font-normal
+                                                            text-gray-900
+                                                            leading-6
+                                                            hover:underline
+                                                            underline-offset-4
+                                                        "
+                                                    >
+                                                        {
+                                                            product.name
+                                                        }
+                                                    </h2>
 
-                                                <span className="
-                                                    text-xs
-                                                    text-gray-400
-                                                    line-through
-                                                ">
-                                                    ₹
-                                                    {formatPrice(
-                                                        product.oldPrice
-                                                    )}
-                                                </span>
+                                                </Link>
+
+                                                <div
+                                                    className="
+                                                        flex
+                                                        items-center
+                                                        gap-2
+                                                        mt-2
+                                                    "
+                                                >
+
+                                                    <span
+                                                        className="
+                                                            text-sm
+                                                            font-medium
+                                                        "
+                                                    >
+                                                        ₹
+                                                        {
+                                                            formatPrice(
+                                                                product.price
+                                                            )
+                                                        }
+                                                    </span>
+
+                                                    <span
+                                                        className="
+                                                            text-xs
+                                                            text-gray-400
+                                                            line-through
+                                                        "
+                                                    >
+                                                        ₹
+                                                        {
+                                                            formatPrice(
+                                                                product.oldPrice
+                                                            )
+                                                        }
+                                                    </span>
+
+                                                </div>
+
+                                                {/* ADD TO CART */}
+
+                                                <button
+                                                    type="button"
+                                                    disabled={
+                                                        !realProduct?._id
+                                                    }
+                                                    onClick={(
+                                                        event
+                                                    ) =>
+                                                        handleAddToCart(
+                                                            event,
+                                                            product
+                                                        )
+                                                    }
+                                                    className={`
+                                                        w-full
+                                                        mt-4
+                                                        border
+                                                        py-3
+                                                        text-xs
+                                                        uppercase
+                                                        tracking-[0.15em]
+                                                        transition
+
+                                                        ${
+                                                            realProduct?._id
+                                                                ? "border-black bg-black text-white hover:bg-white hover:text-black"
+                                                                : "border-gray-300 bg-gray-200 text-gray-400 cursor-not-allowed"
+                                                        }
+                                                    `}
+                                                >
+                                                    {
+                                                        realProduct?._id
+                                                            ? "Add to Cart"
+                                                            : "Unavailable"
+                                                    }
+                                                </button>
 
                                             </div>
 
-
-                                            {/* =================================
-                                                ADD TO CART
-                                            ================================= */}
-
-                                            <button
-                                                type="button"
-                                                onClick={(event) =>
-                                                    handleAddToCart(
-                                                        event,
-                                                        product
-                                                    )
-                                                }
-                                                className="
-                                                    w-full
-                                                    mt-4
-                                                    border
-                                                    border-black
-                                                    bg-black
-                                                    text-white
-                                                    py-3
-                                                    text-xs
-                                                    uppercase
-                                                    tracking-[0.15em]
-                                                    transition
-                                                    hover:bg-white
-                                                    hover:text-black
-                                                "
-                                            >
-                                                Add to Cart
-                                            </button>
-
                                         </div>
-
-                                    </div>
-
-                                )
+                                    );
+                                }
                             )}
 
                         </div>
@@ -905,12 +1097,10 @@ const Footwear = () => {
                     )}
 
                 </div>
-
             </div>
 
         </section>
     );
 };
-
 
 export default Footwear;
