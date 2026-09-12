@@ -13,6 +13,8 @@ const TrackOrder = () => {
         currency
     } = useContext(ShopContext);
 
+    const authToken = token || localStorage.getItem("token");
+
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -26,7 +28,7 @@ const TrackOrder = () => {
 
         try {
 
-            if (!token) {
+            if (!authToken) {
 
                 setError("Please login to view your order.");
 
@@ -43,8 +45,9 @@ const TrackOrder = () => {
 
                     headers: {
                         "Content-Type": "application/json",
-                        token: token
-                    }
+                        token: authToken
+                    },
+                    credentials: "include"
                 }
             );
 
@@ -116,11 +119,8 @@ const TrackOrder = () => {
     // ==========================================
 
     useEffect(() => {
-
-        loadOrder();
-
-    }, [token, orderId]);
-
+    loadOrder();
+}, [token, orderId]);
 
     // ==========================================
     // FORMAT DATE
@@ -507,10 +507,9 @@ const TrackOrder = () => {
                                                 flex
                                                 items-center
                                                 justify-center
-                                                ${
-                                                    completed
-                                                        ? "bg-green-500 border-green-500"
-                                                        : "bg-white border-gray-300"
+                                                ${completed
+                                                    ? "bg-green-500 border-green-500"
+                                                    : "bg-white border-gray-300"
                                                 }
                                             `}
                                         >
@@ -537,11 +536,10 @@ const TrackOrder = () => {
                                                 className={`
                                                     w-[2px]
                                                     h-16
-                                                    ${
-                                                        stepNumber <
+                                                    ${stepNumber <
                                                         currentStep
-                                                            ? "bg-green-500"
-                                                            : "bg-gray-300"
+                                                        ? "bg-green-500"
+                                                        : "bg-gray-300"
                                                     }
                                                 `}
                                             ></div>
@@ -565,10 +563,9 @@ const TrackOrder = () => {
                                         <p
                                             className={`
                                                 font-medium
-                                                ${
-                                                    completed
-                                                        ? "text-gray-800"
-                                                        : "text-gray-400"
+                                                ${completed
+                                                    ? "text-gray-800"
+                                                    : "text-gray-400"
                                                 }
                                             `}
                                         >
@@ -580,10 +577,9 @@ const TrackOrder = () => {
                                             className={`
                                                 text-sm
                                                 mt-1
-                                                ${
-                                                    completed
-                                                        ? "text-gray-500"
-                                                        : "text-gray-400"
+                                                ${completed
+                                                    ? "text-gray-500"
+                                                    : "text-gray-400"
                                                 }
                                             `}
                                         >
@@ -594,16 +590,16 @@ const TrackOrder = () => {
                                         {stepNumber ===
                                             currentStep && (
 
-                                            <p className="
+                                                <p className="
                                                 text-sm
                                                 text-green-500
                                                 mt-2
                                                 font-medium
                                             ">
-                                                Current Status
-                                            </p>
+                                                    Current Status
+                                                </p>
 
-                                        )}
+                                            )}
 
                                     </div>
 
