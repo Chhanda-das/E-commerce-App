@@ -33,6 +33,7 @@ app.use(
         origin: [
             "http://localhost:5173",
             "http://localhost:5174",
+            "https://e-commerce-app-p-rho.vercel.app",
         ],
         credentials: true,
     })
@@ -66,15 +67,9 @@ app.use((req, res, next) => {
     console.log("REQUEST RECEIVED");
     console.log("========================================");
 
-    console.log(
-        "METHOD:",
-        req.method
-    );
+    console.log("METHOD:", req.method);
 
-    console.log(
-        "URL:",
-        req.originalUrl
-    );
+    console.log("URL:", req.originalUrl);
 
     console.log(
         "USER TOKEN:",
@@ -107,25 +102,16 @@ app.use(
         console.log("ADMIN LOGIN ROUTE REACHED");
         console.log("****************************************");
 
-        console.log(
-            "METHOD:",
-            req.method
-        );
+        console.log("METHOD:", req.method);
 
-        console.log(
-            "URL:",
-            req.originalUrl
-        );
+        console.log("URL:", req.originalUrl);
 
-        console.log(
-            "BODY:",
-            {
-                email: req.body?.email,
-                password: req.body?.password
-                    ? "RECEIVED"
-                    : "NOT RECEIVED",
-            }
-        );
+        console.log("BODY:", {
+            email: req.body?.email,
+            password: req.body?.password
+                ? "RECEIVED"
+                : "NOT RECEIVED",
+        });
 
         console.log("****************************************");
 
@@ -223,6 +209,7 @@ app.use(
 
 app.listen(
     PORT,
+    "0.0.0.0",
     () => {
         console.log("");
         console.log("========================================");
@@ -230,12 +217,12 @@ app.listen(
         console.log("========================================");
 
         console.log(
-            `Server running on http://localhost:${PORT}`
+            `Server running on port ${PORT}`
         );
 
         console.log(
             "ADMIN API:",
-            `http://localhost:${PORT}/api/user/admin`
+            `/api/user/admin`
         );
 
         console.log(
