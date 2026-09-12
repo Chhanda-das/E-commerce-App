@@ -237,15 +237,14 @@ const categories = [
 ];
 
 // =====================================================
-// NORMALIZE TEXT
+// NORMALIZE NAME
 // =====================================================
 
 const normalizeText = (value) => {
     return String(value || "")
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, " ")
-        .trim()
-        .replace(/\s+/g, " ");
+        .replace(/\s+/g, " ")
+        .trim();
 };
 
 // =====================================================
@@ -265,7 +264,7 @@ const Footwear = () => {
         useState("");
 
     // =================================================
-    // FIND REAL BACKEND PRODUCT
+    // FIND ONLY EXACT BACKEND PRODUCT
     // =================================================
 
     const findRealProduct = (footwearProduct) => {
@@ -276,113 +275,17 @@ const Footwear = () => {
             return null;
         }
 
-        const localName =
-            normalizeText(
-                footwearProduct.name
-            );
+        const localName = normalizeText(
+            footwearProduct.name
+        );
 
-        // ---------------------------------------------
-        // EXACT NAME MATCH
-        // ---------------------------------------------
-
-        const exactMatch = products.find(
+        const backendProduct = products.find(
             (product) =>
                 normalizeText(product?.name) ===
                 localName
         );
 
-        if (exactMatch) {
-            return exactMatch;
-        }
-
-        // ---------------------------------------------
-        // PARTIAL/TOKEN MATCH
-        // ---------------------------------------------
-
-        const localWords = localName
-            .split(" ")
-            .filter(
-                (word) => word.length >= 3
-            );
-
-        let bestProduct = null;
-        let bestScore = 0;
-
-        products.forEach((product) => {
-            const backendName =
-                normalizeText(
-                    product?.name
-                );
-
-            if (!backendName) {
-                return;
-            }
-
-            const backendWords =
-                backendName.split(" ");
-
-            let score = 0;
-
-            localWords.forEach((word) => {
-                const found = backendWords.some(
-                    (backendWord) =>
-                        backendWord.includes(word) ||
-                        word.includes(backendWord)
-                );
-
-                if (found) {
-                    score++;
-                }
-            });
-
-            // Price similarity
-            const localPrice =
-                Number(
-                    footwearProduct.price
-                );
-
-            const backendPrice =
-                Number(
-                    product?.price
-                );
-
-            if (
-                localPrice > 0 &&
-                backendPrice > 0
-            ) {
-                const difference =
-                    Math.abs(
-                        localPrice -
-                        backendPrice
-                    );
-
-                if (
-                    difference <=
-                    Math.max(
-                        localPrice * 0.25,
-                        500
-                    )
-                ) {
-                    score++;
-                }
-            }
-
-            if (
-                score > bestScore
-            ) {
-                bestScore = score;
-                bestProduct = product;
-            }
-        });
-
-        if (
-            bestProduct &&
-            bestScore >= 2
-        ) {
-            return bestProduct;
-        }
-
-        return null;
+        return backendProduct || null;
     };
 
     // =================================================
@@ -397,9 +300,7 @@ const Footwear = () => {
         event.stopPropagation();
 
         const realProduct =
-            findRealProduct(
-                footwearProduct
-            );
+            findRealProduct(footwearProduct);
 
         console.log(
             "FOOTWEAR PRODUCT:",
@@ -407,59 +308,40 @@ const Footwear = () => {
         );
 
         console.log(
-            "MATCHED BACKEND PRODUCT:",
+            "BACKEND MATCH:",
             realProduct
         );
 
-        if (!realProduct) {
+        // No real database product = do not add
+        // a wrong/random product to cart.
+        if (!realProduct?._id) {
             alert(
-                "This footwear product is not linked to a product in the database."
+                "This footwear item is not available in the product database yet."
             );
             return;
         }
-
-        if (!realProduct._id) {
-            console.error(
-                "Backend product has no _id:",
-                realProduct
-            );
-            return;
-        }
-
-        // ---------------------------------------------
-        // GET SIZE
-        // ---------------------------------------------
 
         let selectedSize = "Default";
 
         if (
-            Array.isArray(
-                realProduct.sizes
-            ) &&
+            Array.isArray(realProduct.sizes) &&
             realProduct.sizes.length > 0
         ) {
             selectedSize =
                 realProduct.sizes[0];
         } else if (
-            Array.isArray(
-                realProduct.size
-            ) &&
+            Array.isArray(realProduct.size) &&
             realProduct.size.length > 0
         ) {
             selectedSize =
                 realProduct.size[0];
         } else if (
-            typeof realProduct.size ===
-                "string" &&
+            typeof realProduct.size === "string" &&
             realProduct.size.trim() !== ""
         ) {
             selectedSize =
                 realProduct.size;
         }
-
-        // ---------------------------------------------
-        // ADD TO CART
-        // ---------------------------------------------
 
         try {
             console.log(
@@ -479,7 +361,6 @@ const Footwear = () => {
             console.log(
                 "FOOTWEAR ADDED TO CART SUCCESSFULLY"
             );
-
         } catch (error) {
             console.error(
                 "ADD FOOTWEAR TO CART ERROR:",
@@ -489,7 +370,7 @@ const Footwear = () => {
     };
 
     // =================================================
-    // FILTER PRODUCTS
+    // FILTER
     // =================================================
 
     const filteredProducts = useMemo(() => {
@@ -508,9 +389,7 @@ const Footwear = () => {
                 const searchMatch =
                     product.name
                         .toLowerCase()
-                        .includes(
-                            searchText
-                        );
+                        .includes(searchText);
 
                 return (
                     categoryMatch &&
@@ -525,7 +404,7 @@ const Footwear = () => {
     ]);
 
     // =================================================
-    // PRODUCT LINK
+    // GET REAL PRODUCT LINK
     // =================================================
 
     const getProductLink = (
@@ -540,11 +419,13 @@ const Footwear = () => {
             return `/product/${realProduct._id}`;
         }
 
-        return "/collection";
+        // Never send a footwear item to
+        // an unrelated product.
+        return "/footwear";
     };
 
     // =================================================
-    // PRICE FORMAT
+    // PRICE
     // =================================================
 
     const formatPrice = (price) => {
@@ -560,9 +441,7 @@ const Footwear = () => {
     return (
         <section className="w-full">
 
-            {/* =========================================
-                HEADER
-            ========================================= */}
+            {/* HEADER */}
 
             <div
                 className="
@@ -574,12 +453,7 @@ const Footwear = () => {
                     pb-8
                 "
             >
-                <div
-                    className="
-                        max-w-7xl
-                        mx-auto
-                    "
-                >
+                <div className="max-w-7xl mx-auto">
 
                     <p
                         className="
@@ -632,8 +506,8 @@ const Footwear = () => {
                                 Discover timeless
                                 footwear designed
                                 for everyday living,
-                                comfort, and
-                                effortless style.
+                                comfort, and effortless
+                                style.
                             </p>
 
                         </div>
@@ -654,9 +528,7 @@ const Footwear = () => {
                 </div>
             </div>
 
-            {/* =========================================
-                SEARCH + FILTER
-            ========================================= */}
+            {/* SEARCH + CATEGORIES */}
 
             <div
                 className="
@@ -675,6 +547,7 @@ const Footwear = () => {
                         py-5
                     "
                 >
+
                     <div
                         className="
                             flex
@@ -762,7 +635,6 @@ const Footwear = () => {
                                             tracking-wide
                                             border
                                             transition
-
                                             ${
                                                 activeCategory ===
                                                 category
@@ -778,12 +650,11 @@ const Footwear = () => {
                         </div>
 
                     </div>
+
                 </div>
             </div>
 
-            {/* =========================================
-                PRODUCTS
-            ========================================= */}
+            {/* PRODUCTS */}
 
             <div
                 className="
@@ -838,8 +709,8 @@ const Footwear = () => {
                                     mt-2
                                 "
                             >
-                                Try another
-                                search or category.
+                                Try another search
+                                or category.
                             </p>
 
                             <button
@@ -884,6 +755,11 @@ const Footwear = () => {
                                             product
                                         );
 
+                                    const productLink =
+                                        getProductLink(
+                                            product
+                                        );
+
                                     return (
                                         <div
                                             key={
@@ -895,15 +771,14 @@ const Footwear = () => {
                                             "
                                         >
 
-                                            {/* PRODUCT IMAGE */}
+                                            {/* IMAGE */}
 
                                             <Link
-                                                to={getProductLink(
-                                                    product
-                                                )}
+                                                to={
+                                                    productLink
+                                                }
                                                 className="block"
                                             >
-
                                                 <div
                                                     className="
                                                         relative
@@ -943,7 +818,6 @@ const Footwear = () => {
                                                             duration-300
                                                         "
                                                     >
-
                                                         <div
                                                             className="
                                                                 bg-black
@@ -955,16 +829,18 @@ const Footwear = () => {
                                                                 uppercase
                                                             "
                                                         >
-                                                            View Product
+                                                            {
+                                                                realProduct?._id
+                                                                    ? "View Product"
+                                                                    : "Coming Soon"
+                                                            }
                                                         </div>
-
                                                     </div>
 
                                                 </div>
-
                                             </Link>
 
-                                            {/* PRODUCT INFO */}
+                                            {/* INFO */}
 
                                             <div className="pt-4">
 
@@ -983,11 +859,10 @@ const Footwear = () => {
                                                 </p>
 
                                                 <Link
-                                                    to={getProductLink(
-                                                        product
-                                                    )}
+                                                    to={
+                                                        productLink
+                                                    }
                                                 >
-
                                                     <h2
                                                         className="
                                                             text-sm
@@ -1003,7 +878,6 @@ const Footwear = () => {
                                                             product.name
                                                         }
                                                     </h2>
-
                                                 </Link>
 
                                                 <div
