@@ -34,6 +34,7 @@ app.use(
             "http://localhost:5173",
             "http://localhost:5174",
             "https://e-commerce-app-p-rho.vercel.app",
+            "https://forever-admin-rose-five.vercel.app",
         ],
         credentials: true,
     })
