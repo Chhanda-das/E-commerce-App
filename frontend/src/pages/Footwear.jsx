@@ -1,979 +1,624 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, {
+    useContext,
+    useMemo,
+    useState,
+} from "react";
+
 import { Link } from "react-router-dom";
+
 import { ShopContext } from "../context/ShopContext";
 
-// =====================================================
-// FOOTWEAR IMAGES
-// =====================================================
+import "../components/css/Collection.css";
 
-const imageFiles = import.meta.glob(
-    "../assets/footwear/*.{jpg,jpeg,png,JPG,JPEG,PNG}",
-    {
-        eager: true,
-        query: "?url",
-        import: "default",
-    }
-);
-
-// =====================================================
-// GET IMAGE
-// =====================================================
-
-const getImage = (fileName) => {
-    const exactPath = `../assets/footwear/${fileName}`;
-
-    if (imageFiles[exactPath]) {
-        return imageFiles[exactPath];
-    }
-
-    const foundPath = Object.keys(imageFiles).find(
-        (path) =>
-            path.toLowerCase() ===
-            exactPath.toLowerCase()
-    );
-
-    return foundPath
-        ? imageFiles[foundPath]
-        : "";
-};
-
-// =====================================================
-// FOOTWEAR PRODUCTS
-// =====================================================
-
-const footwearProducts = [
-    {
-        id: "f1",
-        name: "Classic Leather Sneakers",
-        price: 2499,
-        oldPrice: 3299,
-        category: "Sneakers",
-        image: getImage("f1.jpg"),
-    },
-    {
-        id: "f2",
-        name: "Minimal White Sneakers",
-        price: 2299,
-        oldPrice: 2999,
-        category: "Sneakers",
-        image: getImage("f2.jpg"),
-    },
-    {
-        id: "f3",
-        name: "Everyday Casual Shoes",
-        price: 1999,
-        oldPrice: 2699,
-        category: "Shoes",
-        image: getImage("f3.jpg"),
-    },
-    {
-        id: "f4",
-        name: "Premium Running Shoes",
-        price: 2899,
-        oldPrice: 3799,
-        category: "Running Shoes",
-        image: getImage("f4.jpg"),
-    },
-    {
-        id: "f5",
-        name: "Classic Black Shoes",
-        price: 2599,
-        oldPrice: 3399,
-        category: "Shoes",
-        image: getImage("f5.jpg"),
-    },
-    {
-        id: "f6",
-        name: "Modern Lifestyle Sneakers",
-        price: 2799,
-        oldPrice: 3599,
-        category: "Lifestyle Shoes",
-        image: getImage("f6.jpg"),
-    },
-    {
-        id: "f7",
-        name: "Comfort Sandals",
-        price: 1299,
-        oldPrice: 1799,
-        category: "Sandals",
-        image: getImage("f7.jpg"),
-    },
-    {
-        id: "f8",
-        name: "Premium Casual Sneakers",
-        price: 2399,
-        oldPrice: 3199,
-        category: "Sneakers",
-        image: getImage("f8.jpg"),
-    },
-    {
-        id: "f9",
-        name: "Classic Formal Shoes",
-        price: 2999,
-        oldPrice: 3899,
-        category: "Shoes",
-        image: getImage("f9.jpg"),
-    },
-    {
-        id: "f10",
-        name: "Urban Street Sneakers",
-        price: 2699,
-        oldPrice: 3499,
-        category: "Sneakers",
-        image: getImage("f10.jpg"),
-    },
-    {
-        id: "f11",
-        name: "Lightweight Running Shoes",
-        price: 3099,
-        oldPrice: 3999,
-        category: "Running Shoes",
-        image: getImage("f11.jpg"),
-    },
-    {
-        id: "f12",
-        name: "Comfort Everyday Sandals",
-        price: 1199,
-        oldPrice: 1699,
-        category: "Sandals",
-        image: getImage("f12.jpg"),
-    },
-    {
-        id: "f13",
-        name: "Classic Chelsea Boots",
-        price: 3499,
-        oldPrice: 4499,
-        category: "Boots",
-        image: getImage("f13.jpg"),
-    },
-    {
-        id: "f14",
-        name: "Premium Leather Boots",
-        price: 3999,
-        oldPrice: 4999,
-        category: "Boots",
-        image: getImage("f14.jpg"),
-    },
-    {
-        id: "f15",
-        name: "Modern Heels",
-        price: 2199,
-        oldPrice: 2899,
-        category: "Heels",
-        image: getImage("f15.jpg"),
-    },
-    {
-        id: "f16",
-        name: "Elegant Classic Heels",
-        price: 2499,
-        oldPrice: 3299,
-        category: "Heels",
-        image: getImage("f16.jpg"),
-    },
-    {
-        id: "f17",
-        name: "Soft Comfort Slippers",
-        price: 799,
-        oldPrice: 1199,
-        category: "Slippers",
-        image: getImage("f17.jpg"),
-    },
-    {
-        id: "f18",
-        name: "Premium Home Slippers",
-        price: 899,
-        oldPrice: 1299,
-        category: "Slippers",
-        image: getImage("f18.jpg"),
-    },
-    {
-        id: "f19",
-        name: "Sport Lifestyle Shoes",
-        price: 2799,
-        oldPrice: 3599,
-        category: "Lifestyle Shoes",
-        image: getImage("f19.jpg"),
-    },
-    {
-        id: "f20",
-        name: "Classic Everyday Sneakers",
-        price: 2199,
-        oldPrice: 2999,
-        category: "Sneakers",
-        image: getImage("f20.jpg"),
-    },
-    {
-        id: "f21",
-        name: "Performance Running Shoes",
-        price: 3299,
-        oldPrice: 4299,
-        category: "Running Shoes",
-        image: getImage("f21.jpg"),
-    },
-    {
-        id: "f22",
-        name: "Premium Lifestyle Shoes",
-        price: 2899,
-        oldPrice: 3799,
-        category: "Lifestyle Shoes",
-        image: getImage("f22.jpg"),
-    },
-];
-
-// =====================================================
-// CATEGORIES
-// =====================================================
-
-const categories = [
-    "All",
-    "Shoes",
-    "Sneakers",
-    "Sandals",
-    "Heels",
-    "Boots",
-    "Slippers",
-    "Running Shoes",
-    "Lifestyle Shoes",
-];
-
-// =====================================================
-// NORMALIZE NAME
-// =====================================================
-
-const normalizeText = (value) => {
-    return String(value || "")
-        .toLowerCase()
-        .replace(/\s+/g, " ")
-        .trim();
-};
-
-// =====================================================
-// COMPONENT
-// =====================================================
+// ======================================================
+// FOOTWEAR PAGE
+// ======================================================
 
 const Footwear = () => {
+
     const {
         products,
-        addToCart,
+        currency,
     } = useContext(ShopContext);
 
-    const [activeCategory, setActiveCategory] =
+    const [selectedCategory, setSelectedCategory] =
         useState("All");
 
     const [search, setSearch] =
         useState("");
 
-    // =================================================
-    // FIND ONLY EXACT BACKEND PRODUCT
-    // =================================================
+    // ======================================================
+    // BACKEND URL
+    // ======================================================
 
-    const findRealProduct = (footwearProduct) => {
-        if (
-            !Array.isArray(products) ||
-            products.length === 0
-        ) {
-            return null;
+    const backendUrl =
+        import.meta.env.VITE_BACKEND_URL ||
+        "http://localhost:5000";
+
+    // ======================================================
+    // FOOTWEAR CATEGORIES
+    // ======================================================
+
+    const categories = [
+        "All",
+        "Shoes",
+        "Sneakers",
+        "Sandals",
+        "Heels",
+        "Boots",
+        "Slippers",
+        "Running Shoes",
+        "Lifestyle Shoes",
+    ];
+
+    // ======================================================
+    // IMAGE URL
+    // ======================================================
+
+    const getImageUrl = (image) => {
+
+        if (!image) {
+            return "";
         }
 
-        const localName = normalizeText(
-            footwearProduct.name
-        );
+        const value =
+            String(image).trim();
 
-        const backendProduct = products.find(
-            (product) =>
-                normalizeText(product?.name) ===
-                localName
-        );
+        if (!value) {
+            return "";
+        }
 
-        return backendProduct || null;
+        // Full URL
+        if (
+            value.startsWith("http://") ||
+            value.startsWith("https://")
+        ) {
+            return value;
+        }
+
+        // Old frontend asset path
+        if (
+            value.startsWith("src/assets/")
+        ) {
+            return value;
+        }
+
+        // Backend uploaded image
+        const fileName =
+            value
+                .split("/")
+                .pop()
+                .trim();
+
+        return `${backendUrl}/images/${encodeURIComponent(
+            fileName
+        )}`;
     };
 
-    // =================================================
-    // ADD TO CART
-    // =================================================
+    // ======================================================
+    // FOOTWEAR PRODUCTS FROM DATABASE
+    // ======================================================
 
-    const handleAddToCart = async (
-        event,
-        footwearProduct
-    ) => {
-        event.preventDefault();
-        event.stopPropagation();
+    const footwearProducts = useMemo(() => {
 
-        const realProduct =
-            findRealProduct(footwearProduct);
-
-        console.log(
-            "FOOTWEAR PRODUCT:",
-            footwearProduct
-        );
-
-        console.log(
-            "BACKEND MATCH:",
-            realProduct
-        );
-
-        // No real database product = do not add
-        // a wrong/random product to cart.
-        if (!realProduct?._id) {
-            alert(
-                "This footwear item is not available in the product database yet."
-            );
-            return;
+        if (!Array.isArray(products)) {
+            return [];
         }
 
-        let selectedSize = "Default";
+        let result =
+            products.filter((product) => {
 
-        if (
-            Array.isArray(realProduct.sizes) &&
-            realProduct.sizes.length > 0
-        ) {
-            selectedSize =
-                realProduct.sizes[0];
-        } else if (
-            Array.isArray(realProduct.size) &&
-            realProduct.size.length > 0
-        ) {
-            selectedSize =
-                realProduct.size[0];
-        } else if (
-            typeof realProduct.size === "string" &&
-            realProduct.size.trim() !== ""
-        ) {
-            selectedSize =
-                realProduct.size;
-        }
+                const category =
+                    String(
+                        product.category ||
+                        product.Category ||
+                        ""
+                    )
+                        .trim()
+                        .toLowerCase();
 
-        try {
-            console.log(
-                "ADDING FOOTWEAR TO CART:",
-                {
-                    productId:
-                        realProduct._id,
-                    size: selectedSize,
-                }
-            );
+                const subCategory =
+                    String(
+                        product.subCategory ||
+                        product.subcategory ||
+                        ""
+                    )
+                        .trim()
+                        .toLowerCase();
 
-            await addToCart(
-                realProduct._id,
-                selectedSize
-            );
-
-            console.log(
-                "FOOTWEAR ADDED TO CART SUCCESSFULLY"
-            );
-        } catch (error) {
-            console.error(
-                "ADD FOOTWEAR TO CART ERROR:",
-                error
-            );
-        }
-    };
-
-    // =================================================
-    // FILTER
-    // =================================================
-
-    const filteredProducts = useMemo(() => {
-        const searchText =
-            search
-                .trim()
-                .toLowerCase();
-
-        return footwearProducts.filter(
-            (product) => {
-                const categoryMatch =
-                    activeCategory === "All" ||
-                    product.category ===
-                        activeCategory;
-
-                const searchMatch =
-                    product.name
-                        .toLowerCase()
-                        .includes(searchText);
+                const type =
+                    String(
+                        product.type ||
+                        product.productType ||
+                        ""
+                    )
+                        .trim()
+                        .toLowerCase();
 
                 return (
-                    categoryMatch &&
-                    searchMatch &&
-                    product.image
+                    category === "footwear" ||
+                    category === "shoes" ||
+                    category === "shoe" ||
+                    subCategory === "footwear" ||
+                    subCategory === "shoes" ||
+                    subCategory === "shoe" ||
+                    type === "footwear" ||
+                    type === "shoes" ||
+                    type === "shoe"
                 );
-            }
-        );
+            });
+
+        // ==================================================
+        // SEARCH
+        // ==================================================
+
+        if (search.trim()) {
+
+            const searchText =
+                search
+                    .trim()
+                    .toLowerCase();
+
+            result =
+                result.filter(
+                    (product) => {
+
+                        const name =
+                            String(
+                                product.name ||
+                                ""
+                            ).toLowerCase();
+
+                        const description =
+                            String(
+                                product.description ||
+                                ""
+                            ).toLowerCase();
+
+                        const subCategory =
+                            String(
+                                product.subCategory ||
+                                ""
+                            ).toLowerCase();
+
+                        const productType =
+                            String(
+                                product.productType ||
+                                product.type ||
+                                ""
+                            ).toLowerCase();
+
+                        return (
+                            name.includes(
+                                searchText
+                            ) ||
+                            description.includes(
+                                searchText
+                            ) ||
+                            subCategory.includes(
+                                searchText
+                            ) ||
+                            productType.includes(
+                                searchText
+                            )
+                        );
+                    }
+                );
+        }
+
+        // ==================================================
+        // CATEGORY FILTER
+        // ==================================================
+
+        if (
+            selectedCategory !== "All"
+        ) {
+
+            const selected =
+                selectedCategory
+                    .toLowerCase()
+                    .trim();
+
+            result =
+                result.filter(
+                    (product) => {
+
+                        const category =
+                            String(
+                                product.category ||
+                                ""
+                            )
+                                .toLowerCase()
+                                .trim();
+
+                        const subCategory =
+                            String(
+                                product.subCategory ||
+                                ""
+                            )
+                                .toLowerCase()
+                                .trim();
+
+                        const type =
+                            String(
+                                product.productType ||
+                                product.type ||
+                                ""
+                            )
+                                .toLowerCase()
+                                .trim();
+
+                        return (
+                            category === selected ||
+                            subCategory === selected ||
+                            type === selected
+                        );
+                    }
+                );
+        }
+
+        return result;
+
     }, [
-        activeCategory,
+        products,
+        selectedCategory,
         search,
     ]);
 
-    // =================================================
-    // GET REAL PRODUCT LINK
-    // =================================================
-
-    const getProductLink = (
-        footwearProduct
-    ) => {
-        const realProduct =
-            findRealProduct(
-                footwearProduct
-            );
-
-        if (realProduct?._id) {
-            return `/product/${realProduct._id}`;
-        }
-
-        // Never send a footwear item to
-        // an unrelated product.
-        return "/footwear";
-    };
-
-    // =================================================
-    // PRICE
-    // =================================================
+    // ======================================================
+    // FORMAT PRICE
+    // ======================================================
 
     const formatPrice = (price) => {
-        return Number(price).toLocaleString(
-            "en-IN"
-        );
+
+        return Number(
+            price || 0
+        ).toLocaleString("en-IN");
+
     };
 
-    // =================================================
-    // JSX
-    // =================================================
+    // ======================================================
+    // RENDER
+    // ======================================================
 
     return (
-        <section className="w-full">
+        <main className="collection-page">
 
-            {/* HEADER */}
+            {/* ==========================================
+                HEADER
+            ========================================== */}
 
-            <div
-                className="
-                    px-5
-                    sm:px-8
-                    lg:px-12
-                    pt-10
-                    sm:pt-14
-                    pb-8
-                "
-            >
-                <div className="max-w-7xl mx-auto">
+            <section className="collection-heading">
 
-                    <p
-                        className="
-                            text-xs
-                            uppercase
-                            tracking-[0.3em]
-                            text-gray-400
-                            mb-3
-                        "
-                    >
-                        FOREVER COLLECTION
+                <div>
+
+                    <p className="collection-eyebrow">
+                        THE FOREVER EDIT · FOOTWEAR
                     </p>
 
-                    <div
-                        className="
-                            flex
-                            flex-col
-                            md:flex-row
-                            md:items-end
-                            md:justify-between
-                            gap-5
-                        "
-                    >
+                    <h1>
+                        Footwear
+                        <span>
+                            {" "}Collection
+                        </span>
+                    </h1>
+
+                    <p className="collection-subtitle">
+                        Explore shoes, sneakers,
+                        sandals, boots and more.
+                    </p>
+
+                </div>
+
+                <div className="collection-total">
+
+                    <span>
+                        SHOWING
+                    </span>
+
+                    <strong>
+                        {String(
+                            footwearProducts.length
+                        ).padStart(2, "0")}
+                    </strong>
+
+                </div>
+
+            </section>
+
+            {/* ==========================================
+                FILTER AREA
+            ========================================== */}
+
+            <section className="collection-layout">
+
+                <aside className="collection-filter">
+
+                    <div className="filter-top">
 
                         <div>
 
-                            <h1
-                                className="
-                                    text-4xl
-                                    sm:text-5xl
-                                    lg:text-6xl
-                                    font-light
-                                    tracking-tight
-                                    text-gray-900
-                                "
-                            >
-                                Footwear
-                            </h1>
-
-                            <p
-                                className="
-                                    mt-4
-                                    max-w-xl
-                                    text-sm
-                                    sm:text-base
-                                    leading-7
-                                    text-gray-500
-                                "
-                            >
-                                Discover timeless
-                                footwear designed
-                                for everyday living,
-                                comfort, and effortless
-                                style.
+                            <p className="filter-label">
+                                REFINE
                             </p>
+
+                            <h2>
+                                Footwear
+                            </h2>
 
                         </div>
 
-                        <p
-                            className="
-                                text-sm
-                                text-gray-400
-                            "
-                        >
-                            {filteredProducts.length}
-                            {" "}
-                            Products
-                        </p>
+                        <span className="filter-star">
+                            ✦
+                        </span>
 
                     </div>
 
-                </div>
-            </div>
+                    {/* SEARCH */}
 
-            {/* SEARCH + CATEGORIES */}
+                    <div className="filter-section">
 
-            <div
-                className="
-                    px-5
-                    sm:px-8
-                    lg:px-12
-                    pb-8
-                "
-            >
-                <div
-                    className="
-                        max-w-7xl
-                        mx-auto
-                        border-y
-                        border-gray-200
-                        py-5
-                    "
-                >
+                        <div className="filter-section-title">
+                            <span>
+                                SEARCH
+                            </span>
+                        </div>
 
-                    <div
-                        className="
-                            flex
-                            flex-col
-                            lg:flex-row
-                            lg:items-center
-                            lg:justify-between
-                            gap-5
-                        "
-                    >
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) =>
+                                setSearch(
+                                    e.target.value
+                                )
+                            }
+                            placeholder="Search footwear..."
+                            className="w-full border-b border-gray-300 py-3 outline-none"
+                        />
 
-                        {/* SEARCH */}
+                    </div>
 
-                        <div
-                            className="
-                                relative
-                                w-full
-                                lg:max-w-xs
-                            "
-                        >
+                    {/* CATEGORIES */}
 
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(e) =>
-                                    setSearch(
-                                        e.target.value
-                                    )
-                                }
-                                placeholder="Search footwear"
-                                className="
-                                    w-full
-                                    border-b
-                                    border-gray-300
-                                    bg-transparent
-                                    px-0
-                                    py-3
-                                    pr-8
-                                    text-sm
-                                    outline-none
-                                    placeholder:text-gray-400
-                                    focus:border-black
-                                "
-                            />
+                    <div className="filter-section">
 
-                            <span
-                                className="
-                                    absolute
-                                    right-0
-                                    top-1/2
-                                    -translate-y-1/2
-                                    text-gray-400
-                                "
-                            >
-                                ⌕
+                        <div className="filter-section-title">
+
+                            <span>
+                                CATEGORY
                             </span>
 
                         </div>
 
-                        {/* CATEGORIES */}
+                        <div className="category-list">
 
-                        <div
-                            className="
-                                flex
-                                gap-2
-                                overflow-x-auto
-                                pb-1
-                            "
-                        >
                             {categories.map(
                                 (category) => (
+
                                     <button
                                         key={category}
                                         type="button"
+                                        className={`category-button ${
+                                            selectedCategory ===
+                                            category
+                                                ? "active"
+                                                : ""
+                                        }`}
                                         onClick={() =>
-                                            setActiveCategory(
+                                            setSelectedCategory(
                                                 category
                                             )
                                         }
-                                        className={`
-                                            whitespace-nowrap
-                                            px-4
-                                            py-2
-                                            text-xs
-                                            tracking-wide
-                                            border
-                                            transition
-                                            ${
-                                                activeCategory ===
-                                                category
-                                                    ? "bg-black text-white border-black"
-                                                    : "bg-white text-gray-600 border-gray-200 hover:border-black hover:text-black"
-                                            }
-                                        `}
                                     >
-                                        {category}
+
+                                        <span className="category-icon">
+                                            👟
+                                        </span>
+
+                                        <span>
+                                            {category}
+                                        </span>
+
                                     </button>
+
                                 )
                             )}
+
                         </div>
 
                     </div>
 
-                </div>
-            </div>
+                </aside>
 
-            {/* PRODUCTS */}
+                {/* ==========================================
+                    PRODUCTS
+                ========================================== */}
 
-            <div
-                className="
-                    px-5
-                    sm:px-8
-                    lg:px-12
-                    pb-16
-                "
-            >
-                <div
-                    className="
-                        max-w-7xl
-                        mx-auto
-                    "
-                >
+                <div className="collection-products-area">
 
-                    {filteredProducts.length === 0 ? (
+                    <div className="products-topbar">
 
-                        <div
-                            className="
-                                min-h-[300px]
-                                flex
-                                flex-col
-                                items-center
-                                justify-center
-                                text-center
-                            "
-                        >
+                        <div>
 
-                            <p
-                                className="
-                                    text-4xl
-                                    mb-4
-                                "
-                            >
-                                ⌕
+                            <p>
+                                {
+                                    selectedCategory ===
+                                    "All"
+                                        ? "ALL FOOTWEAR"
+                                        : `${selectedCategory.toUpperCase()}`
+                                }
                             </p>
 
-                            <h2
-                                className="
-                                    text-xl
-                                    font-medium
-                                "
-                            >
-                                No footwear found
-                            </h2>
+                            <span>
+                                {
+                                    footwearProducts.length
+                                }{" "}
+                                {
+                                    footwearProducts.length ===
+                                    1
+                                        ? "piece"
+                                        : "pieces"
+                                }
+                            </span>
 
-                            <p
-                                className="
-                                    text-sm
-                                    text-gray-500
-                                    mt-2
-                                "
-                            >
-                                Try another search
-                                or category.
-                            </p>
+                        </div>
 
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setSearch("");
-                                    setActiveCategory(
-                                        "All"
+                    </div>
+
+                    {/* ==========================================
+                        PRODUCT GRID
+                    ========================================== */}
+
+                    {footwearProducts.length >
+                    0 ? (
+
+                        <div className="collection-product-grid">
+
+                            {footwearProducts.map(
+                                (
+                                    item,
+                                    index
+                                ) => {
+
+                                    const image =
+                                        Array.isArray(
+                                            item.image
+                                        )
+                                            ? item.image[0]
+                                            : item.image;
+
+                                    return (
+
+                                        <Link
+                                            key={
+                                                item._id ||
+                                                index
+                                            }
+                                            to={`/product/${item._id}`}
+                                            className="collection-product-card"
+                                        >
+
+                                            {/* IMAGE */}
+
+                                            <div className="collection-image-wrapper">
+
+                                                {image ? (
+
+                                                    <img
+                                                        src={
+                                                            getImageUrl(
+                                                                image
+                                                            )
+                                                        }
+                                                        alt={
+                                                            item.name ||
+                                                            "Product"
+                                                        }
+                                                        className="collection-product-image"
+                                                        onError={(
+                                                            event
+                                                        ) => {
+                                                            event.currentTarget.style.display =
+                                                                "none";
+                                                        }}
+                                                    />
+
+                                                ) : (
+
+                                                    <div className="collection-no-image">
+                                                        NO IMAGE
+                                                    </div>
+
+                                                )}
+
+                                                <span className="product-number">
+                                                    {String(
+                                                        index +
+                                                        1
+                                                    ).padStart(
+                                                        2,
+                                                        "0"
+                                                    )}
+                                                </span>
+
+                                                <span className="product-view">
+                                                    VIEW PRODUCT
+                                                </span>
+
+                                            </div>
+
+                                            {/* INFO */}
+
+                                            <div className="collection-product-info">
+
+                                                <div>
+
+                                                    <h3>
+                                                        {
+                                                            item.name
+                                                        }
+                                                    </h3>
+
+                                                    <p>
+                                                        {
+                                                            item.subCategory ||
+                                                            item.productType ||
+                                                            item.category ||
+                                                            "Footwear"
+                                                        }
+                                                    </p>
+
+                                                </div>
+
+                                                <strong>
+                                                    {currency}
+                                                    {formatPrice(
+                                                        item.price
+                                                    )}
+                                                </strong>
+
+                                            </div>
+
+                                        </Link>
+
                                     );
-                                }}
-                                className="
-                                    mt-5
-                                    underline
-                                    underline-offset-4
-                                    text-sm
-                                "
-                            >
-                                Clear filters
-                            </button>
+                                }
+                            )}
 
                         </div>
 
                     ) : (
 
-                        <div
-                            className="
-                                grid
-                                grid-cols-2
-                                md:grid-cols-3
-                                lg:grid-cols-4
-                                gap-x-4
-                                sm:gap-x-6
-                                gap-y-10
-                            "
-                        >
+                        <div className="collection-empty">
 
-                            {filteredProducts.map(
-                                (product) => {
+                            <div className="empty-icon">
+                                👟
+                            </div>
 
-                                    const realProduct =
-                                        findRealProduct(
-                                            product
-                                        );
+                            <p>
+                                NO FOOTWEAR FOUND
+                            </p>
 
-                                    const productLink =
-                                        getProductLink(
-                                            product
-                                        );
+                            <h2>
+                                No footwear products yet.
+                            </h2>
 
-                                    return (
-                                        <div
-                                            key={
-                                                product.id
-                                            }
-                                            className="
-                                                group
-                                                block
-                                            "
-                                        >
-
-                                            {/* IMAGE */}
-
-                                            <Link
-                                                to={
-                                                    productLink
-                                                }
-                                                className="block"
-                                            >
-                                                <div
-                                                    className="
-                                                        relative
-                                                        overflow-hidden
-                                                        bg-[#f5f5f3]
-                                                        aspect-[3/4]
-                                                    "
-                                                >
-
-                                                    <img
-                                                        src={
-                                                            product.image
-                                                        }
-                                                        alt={
-                                                            product.name
-                                                        }
-                                                        loading="lazy"
-                                                        className="
-                                                            w-full
-                                                            h-full
-                                                            object-cover
-                                                            transition
-                                                            duration-700
-                                                            ease-out
-                                                            group-hover:scale-105
-                                                        "
-                                                    />
-
-                                                    <div
-                                                        className="
-                                                            absolute
-                                                            inset-x-0
-                                                            bottom-0
-                                                            translate-y-full
-                                                            group-hover:translate-y-0
-                                                            transition
-                                                            duration-300
-                                                        "
-                                                    >
-                                                        <div
-                                                            className="
-                                                                bg-black
-                                                                text-white
-                                                                text-center
-                                                                py-3
-                                                                text-xs
-                                                                tracking-[0.15em]
-                                                                uppercase
-                                                            "
-                                                        >
-                                                            {
-                                                                realProduct?._id
-                                                                    ? "View Product"
-                                                                    : "Coming Soon"
-                                                            }
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </Link>
-
-                                            {/* INFO */}
-
-                                            <div className="pt-4">
-
-                                                <p
-                                                    className="
-                                                        text-[10px]
-                                                        uppercase
-                                                        tracking-[0.18em]
-                                                        text-gray-400
-                                                        mb-2
-                                                    "
-                                                >
-                                                    {
-                                                        product.category
-                                                    }
-                                                </p>
-
-                                                <Link
-                                                    to={
-                                                        productLink
-                                                    }
-                                                >
-                                                    <h2
-                                                        className="
-                                                            text-sm
-                                                            sm:text-base
-                                                            font-normal
-                                                            text-gray-900
-                                                            leading-6
-                                                            hover:underline
-                                                            underline-offset-4
-                                                        "
-                                                    >
-                                                        {
-                                                            product.name
-                                                        }
-                                                    </h2>
-                                                </Link>
-
-                                                <div
-                                                    className="
-                                                        flex
-                                                        items-center
-                                                        gap-2
-                                                        mt-2
-                                                    "
-                                                >
-
-                                                    <span
-                                                        className="
-                                                            text-sm
-                                                            font-medium
-                                                        "
-                                                    >
-                                                        ₹
-                                                        {
-                                                            formatPrice(
-                                                                product.price
-                                                            )
-                                                        }
-                                                    </span>
-
-                                                    <span
-                                                        className="
-                                                            text-xs
-                                                            text-gray-400
-                                                            line-through
-                                                        "
-                                                    >
-                                                        ₹
-                                                        {
-                                                            formatPrice(
-                                                                product.oldPrice
-                                                            )
-                                                        }
-                                                    </span>
-
-                                                </div>
-
-                                                {/* ADD TO CART */}
-
-                                                <button
-                                                    type="button"
-                                                    disabled={
-                                                        !realProduct?._id
-                                                    }
-                                                    onClick={(
-                                                        event
-                                                    ) =>
-                                                        handleAddToCart(
-                                                            event,
-                                                            product
-                                                        )
-                                                    }
-                                                    className={`
-                                                        w-full
-                                                        mt-4
-                                                        border
-                                                        py-3
-                                                        text-xs
-                                                        uppercase
-                                                        tracking-[0.15em]
-                                                        transition
-
-                                                        ${
-                                                            realProduct?._id
-                                                                ? "border-black bg-black text-white hover:bg-white hover:text-black"
-                                                                : "border-gray-300 bg-gray-200 text-gray-400 cursor-not-allowed"
-                                                        }
-                                                    `}
-                                                >
-                                                    {
-                                                        realProduct?._id
-                                                            ? "Add to Cart"
-                                                            : "Unavailable"
-                                                    }
-                                                </button>
-
-                                            </div>
-
-                                        </div>
-                                    );
-                                }
-                            )}
+                            <span>
+                                Add products from the
+                                Admin Panel with
+                                Category set to
+                                Footwear.
+                            </span>
 
                         </div>
 
                     )}
 
                 </div>
-            </div>
 
-        </section>
+            </section>
+
+        </main>
     );
 };
 
