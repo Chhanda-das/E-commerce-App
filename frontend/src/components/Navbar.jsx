@@ -15,7 +15,6 @@ import { assets } from "../assets/assets";
 
 import "./css/Navbar.css";
 
-
 const Navbar = () => {
 
     // ==========================================
@@ -23,13 +22,9 @@ const Navbar = () => {
     // ==========================================
 
     const [visible, setVisible] = useState(false);
-
     const [profileOpen, setProfileOpen] = useState(false);
-
     const [searchOpen, setSearchOpen] = useState(false);
-
     const [searchValue, setSearchValue] = useState("");
-
 
     // ==========================================
     // SHOP CONTEXT
@@ -44,7 +39,6 @@ const Navbar = () => {
         setCartItems
     } = useContext(ShopContext);
 
-
     // ==========================================
     // NAV LINK STYLE
     // ==========================================
@@ -56,34 +50,26 @@ const Navbar = () => {
                 : ""
         }`;
 
-
     // ==========================================
     // OPEN SEARCH
     // ==========================================
 
     const openSearch = () => {
-
         setProfileOpen(false);
-
         setVisible(false);
-
         setSearchOpen(true);
 
         if (setShowSearch) {
             setShowSearch(true);
         }
-
     };
-
 
     // ==========================================
     // CLOSE SEARCH
     // ==========================================
 
     const closeSearch = () => {
-
         setSearchOpen(false);
-
         setSearchValue("");
 
         if (setSearch) {
@@ -93,16 +79,13 @@ const Navbar = () => {
         if (setShowSearch) {
             setShowSearch(false);
         }
-
     };
-
 
     // ==========================================
     // SEARCH HANDLER
     // ==========================================
 
     const handleSearch = (event) => {
-
         const value = event.target.value;
 
         setSearchValue(value);
@@ -110,26 +93,20 @@ const Navbar = () => {
         if (setSearch) {
             setSearch(value);
         }
-
     };
-
 
     // ==========================================
     // SUBMIT SEARCH
     // ==========================================
 
     const submitSearch = (event) => {
-
         event.preventDefault();
 
         const value = searchValue.trim();
 
         if (!value) {
-
             navigate("/collection");
-
             return;
-
         }
 
         if (setSearch) {
@@ -143,81 +120,41 @@ const Navbar = () => {
         }
 
         navigate("/collection");
-
     };
 
-
     // ==========================================
-    // PROFILE MENU TOGGLE
+    // PROFILE
     // ==========================================
 
     const toggleProfile = () => {
-
-        setProfileOpen(
-            (prev) => !prev
-        );
-
+        setProfileOpen((prev) => !prev);
     };
-
-
-    // ==========================================
-    // CLOSE PROFILE MENU
-    // ==========================================
 
     const closeProfileMenu = () => {
-
         setProfileOpen(false);
-
     };
-
-
-    // ==========================================
-    // GO TO PROFILE
-    // ==========================================
 
     const goToProfile = () => {
-
         closeProfileMenu();
-
         navigate("/profile");
-
     };
-
-
-    // ==========================================
-    // GO TO ORDERS
-    // ==========================================
 
     const goToOrders = () => {
-
         closeProfileMenu();
-
         navigate("/orders");
-
     };
-
-
-    // ==========================================
-    // GO TO LOGIN
-    // ==========================================
 
     const goToLogin = () => {
-
         closeProfileMenu();
-
         navigate("/login");
-
     };
-
 
     // ==========================================
     // LOGOUT
     // ==========================================
 
     const logout = async () => {
-
         try {
-
             await axios.post(
                 `${backendUrl}/api/user/logout`,
                 {},
@@ -225,56 +162,38 @@ const Navbar = () => {
                     withCredentials: true
                 }
             );
-
         } catch (error) {
-
             console.error(
                 "LOGOUT ERROR:",
                 error
             );
-
         } finally {
-
             if (setCartItems) {
-
                 setCartItems({});
-
             }
+
+            localStorage.removeItem("token");
 
             setProfileOpen(false);
 
             navigate("/login", {
                 replace: true
             });
-
         }
-
     };
 
-
     // ==========================================
-    // OPEN MOBILE MENU
+    // MOBILE MENU
     // ==========================================
 
     const openMobileMenu = () => {
-
         setProfileOpen(false);
-
         setVisible(true);
-
     };
-
-
-    // ==========================================
-    // CLOSE MOBILE MENU
-    // ==========================================
 
     const closeMobileMenu = () => {
-
         setVisible(false);
-
     };
-
 
     // ==========================================
     // RETURN
@@ -282,33 +201,26 @@ const Navbar = () => {
 
     return (
         <>
-
             {/* ======================================
-                DESKTOP NAVBAR
+                NAVBAR
             ====================================== */}
 
             <header className="navbar">
 
                 <div className="navbar-inner">
 
-
-                    {/* ==================================
-                        LOGO
-                    ================================== */}
+                    {/* LOGO */}
 
                     <Link
                         to="/"
                         className="navbar-logo-link"
                     >
-
                         <img
                             src={assets.logo}
                             className="navbar-logo"
                             alt="Forever"
                         />
-
                     </Link>
-
 
                     {/* ==================================
                         DESKTOP MENU
@@ -316,72 +228,131 @@ const Navbar = () => {
 
                     <nav className="navbar-menu">
 
-
-                        {/* HOME */}
-
                         <NavLink
                             to="/"
                             className={navLinkStyle}
                         >
-
-                            <span>
-                                HOME
-                            </span>
-
+                            <span>HOME</span>
                             <i></i>
-
                         </NavLink>
-
-
-                        {/* COLLECTION */}
 
                         <NavLink
                             to="/collection"
                             className={navLinkStyle}
                         >
-
                             <span>
                                 COLLECTION
                             </span>
-
                             <i></i>
-
                         </NavLink>
-
-
-                        {/* ABOUT */}
 
                         <NavLink
                             to="/about"
                             className={navLinkStyle}
                         >
-
-                            <span>
-                                ABOUT
-                            </span>
-
+                            <span>ABOUT</span>
                             <i></i>
-
                         </NavLink>
-
-
-                        {/* CONTACT */}
 
                         <NavLink
                             to="/contact"
                             className={navLinkStyle}
                         >
-
-                            <span>
-                                CONTACT
-                            </span>
-
+                            <span>CONTACT</span>
                             <i></i>
-
                         </NavLink>
 
                     </nav>
 
+                    {/* ==================================
+                        MOBILE TOP MENU
+                    ================================== */}
+
+                    <nav
+                        className="
+                            md:hidden
+                            flex
+                            items-center
+                            gap-3
+                            overflow-x-auto
+                            whitespace-nowrap
+                            px-2
+                        "
+                    >
+
+                        <NavLink
+                            to="/"
+                            className={({ isActive }) =>
+                                `
+                                text-[9px]
+                                tracking-[0.12em]
+                                transition
+                                ${
+                                    isActive
+                                        ? "text-black font-semibold"
+                                        : "text-gray-500"
+                                }
+                                `
+                            }
+                        >
+                            HOME
+                        </NavLink>
+
+                        <NavLink
+                            to="/collection"
+                            className={({ isActive }) =>
+                                `
+                                text-[9px]
+                                tracking-[0.12em]
+                                transition
+                                ${
+                                    isActive
+                                        ? "text-black font-semibold"
+                                        : "text-gray-500"
+                                }
+                                `
+                            }
+                        >
+                            COLLECTION
+                        </NavLink>
+
+                        <NavLink
+                            to="/about"
+                            className={({ isActive }) =>
+                                `
+                                text-[9px]
+                                tracking-[0.12em]
+                                transition
+                                ${
+                                    isActive
+                                        ? "text-black font-semibold"
+                                        : "text-gray-500"
+                                }
+                                `
+                            }
+                        >
+                            ABOUT
+                        </NavLink>
+
+                        <NavLink
+                            to="/contact"
+                            className={({ isActive }) =>
+                                `
+                                text-[9px]
+                                tracking-[0.12em]
+                                transition
+                                ${
+                                    isActive
+                                        ? "text-black font-semibold"
+                                        : "text-gray-500"
+                                }
+                                `
+                            }
+                        >
+                            CONTACT
+                        </NavLink>
+
+                    </nav>
 
                     {/* ==================================
                         RIGHT ACTIONS
@@ -389,10 +360,7 @@ const Navbar = () => {
 
                     <div className="navbar-actions">
 
-
-                        {/* ==================================
-                            SEARCH
-                        ================================== */}
+                        {/* SEARCH */}
 
                         <button
                             type="button"
@@ -400,44 +368,34 @@ const Navbar = () => {
                             onClick={openSearch}
                             aria-label="Search"
                         >
-
                             <img
                                 src={assets.search_icon}
                                 alt="Search"
                             />
-
                         </button>
 
-
-                        {/* ==================================
-                            PROFILE DROPDOWN
-                        ================================== */}
+                        {/* PROFILE */}
 
                         <div className="navbar-profile relative">
-
-
-                            {/* PROFILE ICON */}
 
                             <button
                                 type="button"
                                 className="navbar-icon-button"
                                 onClick={toggleProfile}
                                 aria-label="Profile menu"
-                                aria-expanded={profileOpen}
+                                aria-expanded={
+                                    profileOpen
+                                }
                             >
-
                                 <img
-                                    src={assets.profile_icon}
+                                    src={
+                                        assets.profile_icon
+                                    }
                                     alt="Profile"
                                 />
-
                             </button>
 
-
-                            {/* PROFILE DROPDOWN */}
-
                             {profileOpen && (
-
                                 <div
                                     className="
                                         absolute
@@ -453,12 +411,11 @@ const Navbar = () => {
                                     "
                                 >
 
-
-                                    {/* PROFILE */}
-
                                     <button
                                         type="button"
-                                        onClick={goToProfile}
+                                        onClick={
+                                            goToProfile
+                                        }
                                         className="
                                             w-full
                                             text-left
@@ -467,24 +424,16 @@ const Navbar = () => {
                                             text-sm
                                             text-gray-800
                                             hover:bg-gray-50
-                                            transition
                                         "
                                     >
-
-                                        <span className="mr-2">
-                                            👤
-                                        </span>
-
-                                        Profile
-
+                                        👤 Profile
                                     </button>
-
-
-                                    {/* ORDERS */}
 
                                     <button
                                         type="button"
-                                        onClick={goToOrders}
+                                        onClick={
+                                            goToOrders
+                                        }
                                         className="
                                             w-full
                                             text-left
@@ -493,27 +442,18 @@ const Navbar = () => {
                                             text-sm
                                             text-gray-800
                                             hover:bg-gray-50
-                                            transition
                                         "
                                     >
-
-                                        <span className="mr-2">
-                                            📦
-                                        </span>
-
-                                        My Orders
-
+                                        📦 My Orders
                                     </button>
-
 
                                     <div className="border-t border-gray-100"></div>
 
-
-                                    {/* SIGN IN */}
-
                                     <button
                                         type="button"
-                                        onClick={goToLogin}
+                                        onClick={
+                                            goToLogin
+                                        }
                                         className="
                                             w-full
                                             text-left
@@ -522,20 +462,10 @@ const Navbar = () => {
                                             text-sm
                                             text-gray-800
                                             hover:bg-gray-50
-                                            transition
                                         "
                                     >
-
-                                        <span className="mr-2">
-                                            🔐
-                                        </span>
-
-                                        Sign In
-
+                                        🔐 Sign In
                                     </button>
-
-
-                                    {/* LOGOUT */}
 
                                     <button
                                         type="button"
@@ -548,64 +478,48 @@ const Navbar = () => {
                                             text-sm
                                             text-red-600
                                             hover:bg-red-50
-                                            transition
                                         "
                                     >
-
-                                        <span className="mr-2">
-                                            🚪
-                                        </span>
-
-                                        Logout
-
+                                        🚪 Logout
                                     </button>
 
-
                                 </div>
-
                             )}
 
                         </div>
 
-
-                        {/* ==================================
-                            CART
-                        ================================== */}
+                        {/* CART */}
 
                         <Link
                             to="/cart"
                             className="navbar-cart"
                         >
-
                             <img
-                                src={assets.cart_icon}
+                                src={
+                                    assets.cart_icon
+                                }
                                 alt="Cart"
                             />
 
                             <span>
                                 {getCartCount()}
                             </span>
-
                         </Link>
 
-
-                        {/* ==================================
-                            MOBILE BUTTON
-                        ================================== */}
+                        {/* MOBILE MENU BUTTON */}
 
                         <button
                             type="button"
                             className="navbar-mobile-button"
-                            onClick={openMobileMenu}
+                            onClick={
+                                openMobileMenu
+                            }
                             aria-label="Open menu"
                         >
-
                             <span></span>
                             <span></span>
                             <span></span>
-
                         </button>
-
 
                     </div>
 
@@ -613,13 +527,11 @@ const Navbar = () => {
 
             </header>
 
-
             {/* ======================================
                 SEARCH OVERLAY
             ====================================== */}
 
             {searchOpen && (
-
                 <div
                     className="
                         fixed
@@ -660,21 +572,25 @@ const Navbar = () => {
                             "
                         >
 
-                            {/* SEARCH ICON */}
-
                             <img
-                                src={assets.search_icon}
+                                src={
+                                    assets.search_icon
+                                }
                                 alt="Search"
-                                className="w-5 h-5"
+                                className="
+                                    w-5
+                                    h-5
+                                "
                             />
-
-
-                            {/* INPUT */}
 
                             <input
                                 type="text"
-                                value={searchValue}
-                                onChange={handleSearch}
+                                value={
+                                    searchValue
+                                }
+                                onChange={
+                                    handleSearch
+                                }
                                 autoFocus
                                 placeholder="Search products..."
                                 className="
@@ -685,12 +601,11 @@ const Navbar = () => {
                                 "
                             />
 
-
-                            {/* CLOSE */}
-
                             <button
                                 type="button"
-                                onClick={closeSearch}
+                                onClick={
+                                    closeSearch
+                                }
                                 className="
                                     text-2xl
                                     text-gray-500
@@ -703,9 +618,6 @@ const Navbar = () => {
 
                         </div>
 
-
-                        {/* SEARCH BUTTON */}
-
                         <button
                             type="submit"
                             className="
@@ -716,8 +628,6 @@ const Navbar = () => {
                                 py-3
                                 text-sm
                                 tracking-wide
-                                hover:bg-gray-800
-                                transition
                             "
                         >
                             SEARCH PRODUCTS
@@ -726,33 +636,23 @@ const Navbar = () => {
                     </form>
 
                 </div>
-
             )}
-
 
             {/* ======================================
                 MOBILE SIDEBAR
             ====================================== */}
 
             {visible && (
-
                 <div className="mobile-sidebar-overlay">
-
-
-                    {/* BACKDROP */}
 
                     <div
                         className="mobile-sidebar-backdrop"
-                        onClick={closeMobileMenu}
+                        onClick={
+                            closeMobileMenu
+                        }
                     ></div>
 
-
-                    {/* SIDEBAR */}
-
                     <aside className="mobile-sidebar">
-
-
-                        {/* HEADER */}
 
                         <div className="mobile-sidebar-header">
 
@@ -762,7 +662,9 @@ const Navbar = () => {
 
                             <button
                                 type="button"
-                                onClick={closeMobileMenu}
+                                onClick={
+                                    closeMobileMenu
+                                }
                                 aria-label="Close menu"
                             >
                                 ×
@@ -770,270 +672,179 @@ const Navbar = () => {
 
                         </div>
 
-
-                        {/* MENU */}
-
                         <div className="mobile-sidebar-menu">
-
-
-                            {/* HOME */}
 
                             <NavLink
                                 to="/"
-                                onClick={closeMobileMenu}
+                                onClick={
+                                    closeMobileMenu
+                                }
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     01
                                 </span>
-
                                 <span>
                                     HOME
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </NavLink>
-
-
-                            {/* COLLECTION */}
 
                             <NavLink
                                 to="/collection"
-                                onClick={closeMobileMenu}
+                                onClick={
+                                    closeMobileMenu
+                                }
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     02
                                 </span>
-
                                 <span>
                                     COLLECTION
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </NavLink>
-
-
-                            {/* ABOUT */}
 
                             <NavLink
                                 to="/about"
-                                onClick={closeMobileMenu}
+                                onClick={
+                                    closeMobileMenu
+                                }
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     03
                                 </span>
-
                                 <span>
                                     ABOUT
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </NavLink>
-
-
-                            {/* CONTACT */}
 
                             <NavLink
                                 to="/contact"
-                                onClick={closeMobileMenu}
+                                onClick={
+                                    closeMobileMenu
+                                }
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     04
                                 </span>
-
                                 <span>
                                     CONTACT
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </NavLink>
-
-
-                            {/* FOOTWEAR */}
 
                             <NavLink
                                 to="/footwear"
-                                onClick={closeMobileMenu}
+                                onClick={
+                                    closeMobileMenu
+                                }
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     05
                                 </span>
-
                                 <span>
                                     FOOTWEAR
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </NavLink>
-
-
-                            {/* PROFILE */}
 
                             <button
                                 type="button"
                                 onClick={() => {
-
                                     closeMobileMenu();
-
-                                    navigate("/profile");
-
+                                    navigate(
+                                        "/profile"
+                                    );
                                 }}
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     06
                                 </span>
-
                                 <span>
                                     PROFILE
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </button>
-
-
-                            {/* ORDERS */}
 
                             <button
                                 type="button"
                                 onClick={() => {
-
                                     closeMobileMenu();
-
-                                    navigate("/orders");
-
+                                    navigate(
+                                        "/orders"
+                                    );
                                 }}
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     07
                                 </span>
-
                                 <span>
                                     MY ORDERS
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </button>
-
-
-                            {/* SIGN IN */}
 
                             <button
                                 type="button"
                                 onClick={() => {
-
                                     closeMobileMenu();
-
-                                    navigate("/login");
-
+                                    navigate(
+                                        "/login"
+                                    );
                                 }}
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     08
                                 </span>
-
                                 <span>
                                     SIGN IN
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </button>
-
-
-                            {/* LOGOUT */}
 
                             <button
                                 type="button"
                                 onClick={() => {
-
                                     closeMobileMenu();
-
                                     logout();
-
                                 }}
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     09
                                 </span>
-
                                 <span>
                                     LOGOUT
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </button>
-
-
-                            {/* MOBILE SEARCH */}
 
                             <button
                                 type="button"
-                                onClick={openSearch}
+                                onClick={
+                                    openSearch
+                                }
                                 className="mobile-nav-link"
                             >
-
                                 <span className="mobile-nav-number">
                                     10
                                 </span>
-
                                 <span>
                                     SEARCH
                                 </span>
-
-                                <b>
-                                    →
-                                </b>
-
+                                <b>→</b>
                             </button>
 
-
                         </div>
-
-
-                        {/* FOOTER */}
 
                         <div className="mobile-sidebar-footer">
 
@@ -1043,17 +854,12 @@ const Navbar = () => {
 
                         </div>
 
-
                     </aside>
 
                 </div>
-
             )}
-
         </>
     );
-
 };
-
 
 export default Navbar;
