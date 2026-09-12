@@ -19,7 +19,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import TrackOrder from "./pages/TrackOrder";
 import Verify from "./pages/Verify";
-
+import Footwear from "./pages/Footwear";
 const App = () => {
     return (
         <>
@@ -37,8 +37,15 @@ const App = () => {
                 <Route
                     path="/collection"
                     element={<Collection />}
-                />
 
+                />
+              // Footwear
+                <Routes>
+                    {/* other routes */}
+
+                    <Route path="/footwear" element={<Footwear />} />
+                </Routes>
+                
                 {/* Product */}
                 <Route
                     path="/product/:productId"
