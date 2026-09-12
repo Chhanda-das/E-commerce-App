@@ -20,6 +20,7 @@ import Register from "./pages/Register";
 import TrackOrder from "./pages/TrackOrder";
 import Verify from "./pages/Verify";
 import Footwear from "./pages/Footwear";
+
 const App = () => {
     return (
         <>
@@ -37,15 +38,14 @@ const App = () => {
                 <Route
                     path="/collection"
                     element={<Collection />}
-
                 />
-              // Footwear
-                <Routes>
-                    {/* other routes */}
 
-                    <Route path="/footwear" element={<Footwear />} />
-                </Routes>
-                
+                {/* Footwear */}
+                <Route
+                    path="/footwear"
+                    element={<Footwear />}
+                />
+
                 {/* Product */}
                 <Route
                     path="/product/:productId"
@@ -81,12 +81,19 @@ const App = () => {
                     path="/orders"
                     element={<Orders />}
                 />
-                <Route path="/verify" element={<Verify />} />
+
+                {/* Verify */}
+                <Route
+                    path="/verify"
+                    element={<Verify />}
+                />
+
                 {/* Track Order */}
                 <Route
                     path="/track-order/:orderId"
                     element={<TrackOrder />}
                 />
+
                 {/* Profile */}
                 <Route
                     path="/profile"
@@ -98,8 +105,13 @@ const App = () => {
                     path="/login"
                     element={<Login />}
                 />
+
                 {/* Register */}
-                <Route path="/register" element={<Register />} />
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
+
             </Routes>
 
             <Footer />
