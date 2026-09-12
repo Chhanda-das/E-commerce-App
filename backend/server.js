@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 import "dotenv/config";
 
 import connectDB from "./config/mongodb.js";
@@ -15,6 +17,17 @@ import orderRouter from "./routes/orderRoute.js";
 // ==========================================
 
 const app = express();
+
+// ==========================================
+// ES MODULE PATH
+// ==========================================
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ==========================================
+// PORT
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 
@@ -59,6 +72,15 @@ app.use(
 app.use(cookieParser());
 
 // ==========================================
+// PRODUCT IMAGE / UPLOAD FILES
+// ==========================================
+
+app.use(
+    "/images",
+    express.static(path.join(__dirname, "uploads"))
+);
+
+// ==========================================
 // SERVER DEBUG
 // ==========================================
 
@@ -69,7 +91,6 @@ app.use((req, res, next) => {
     console.log("========================================");
 
     console.log("METHOD:", req.method);
-
     console.log("URL:", req.originalUrl);
 
     console.log(
@@ -104,7 +125,6 @@ app.use(
         console.log("****************************************");
 
         console.log("METHOD:", req.method);
-
         console.log("URL:", req.originalUrl);
 
         console.log("BODY:", {
@@ -223,7 +243,7 @@ app.listen(
 
         console.log(
             "ADMIN API:",
-            `/api/user/admin`
+            "/api/user/admin"
         );
 
         console.log(
