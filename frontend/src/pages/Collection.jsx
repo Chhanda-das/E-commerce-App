@@ -1,5 +1,10 @@
-import React, { useContext, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, {
+    useContext,
+    useMemo,
+    useState,
+} from "react";
+
+import { Link } from "react-router-dom";
 
 import { ShopContext } from "../context/ShopContext";
 
@@ -17,10 +22,10 @@ const Collection = () => {
         search,
     } = useContext(ShopContext);
 
-    const navigate = useNavigate();
-
-    const [selectedCategory, setSelectedCategory] = useState("All");
-
+    const [
+        selectedCategory,
+        setSelectedCategory
+    ] = useState("All");
 
     // ======================================================
     // CATEGORY LIST
@@ -55,7 +60,7 @@ const Collection = () => {
         {
             name: "Watches",
             icon: "⌚",
-            value: "Watch", // IMPORTANT: Watch, not Watches
+            value: "Watch",
         },
 
         {
@@ -78,7 +83,6 @@ const Collection = () => {
 
     ];
 
-
     // ======================================================
     // FILTER PRODUCTS
     // ======================================================
@@ -90,7 +94,6 @@ const Collection = () => {
         }
 
         let result = [...products];
-
 
         // ==================================================
         // SEARCH FILTER
@@ -106,48 +109,50 @@ const Collection = () => {
                     .trim()
                     .toLowerCase();
 
+            result = result.filter(
+                (product) => {
 
-            result = result.filter((product) => {
+                    const name =
+                        String(
+                            product.name || ""
+                        ).toLowerCase();
 
-                const name =
-                    String(
-                        product.name || ""
-                    ).toLowerCase();
+                    const description =
+                        String(
+                            product.description || ""
+                        ).toLowerCase();
 
+                    const category =
+                        String(
+                            product.category ||
+                            product.Category ||
+                            ""
+                        ).toLowerCase();
 
-                const description =
-                    String(
-                        product.description || ""
-                    ).toLowerCase();
+                    const subCategory =
+                        String(
+                            product.subCategory ||
+                            product.subcategory ||
+                            ""
+                        ).toLowerCase();
 
-
-                const category =
-                    String(
-                        product.category ||
-                        product.Category ||
-                        ""
-                    ).toLowerCase();
-
-
-                const subCategory =
-                    String(
-                        product.subCategory ||
-                        product.subcategory ||
-                        ""
-                    ).toLowerCase();
-
-
-                return (
-                    name.includes(searchText) ||
-                    description.includes(searchText) ||
-                    category.includes(searchText) ||
-                    subCategory.includes(searchText)
-                );
-
-            });
-
+                    return (
+                        name.includes(
+                            searchText
+                        ) ||
+                        description.includes(
+                            searchText
+                        ) ||
+                        category.includes(
+                            searchText
+                        ) ||
+                        subCategory.includes(
+                            searchText
+                        )
+                    );
+                }
+            );
         }
-
 
         // ==================================================
         // CATEGORY FILTER
@@ -162,177 +167,190 @@ const Collection = () => {
                     .trim()
                     .toLowerCase();
 
-
             result =
-                result.filter((product) => {
+                result.filter(
+                    (product) => {
 
-                    const category =
-                        String(
-                            product.category ||
-                            product.Category ||
-                            ""
-                        )
-                            .trim()
-                            .toLowerCase();
+                        const category =
+                            String(
+                                product.category ||
+                                product.Category ||
+                                ""
+                            )
+                                .trim()
+                                .toLowerCase();
 
+                        const subCategory =
+                            String(
+                                product.subCategory ||
+                                product.subcategory ||
+                                ""
+                            )
+                                .trim()
+                                .toLowerCase();
 
-                    const subCategory =
-                        String(
-                            product.subCategory ||
-                            product.subcategory ||
-                            ""
-                        )
-                            .trim()
-                            .toLowerCase();
+                        const type =
+                            String(
+                                product.type ||
+                                product.productType ||
+                                ""
+                            )
+                                .trim()
+                                .toLowerCase();
 
+                        // ======================================
+                        // CLOTHING
+                        // ======================================
 
-                    const type =
-                        String(
-                            product.type ||
-                            product.productType ||
-                            ""
-                        )
-                            .trim()
-                            .toLowerCase();
+                        if (
+                            selectedCategory ===
+                            "Clothing"
+                        ) {
 
+                            return (
+                                category === "men" ||
+                                category === "women" ||
+                                category === "kids" ||
+                                category === "clothing" ||
+                                category === "clothes"
+                            );
 
-                    // ======================================
-                    // CLOTHING
-                    // ======================================
+                        }
 
-                    if (
-                        selectedCategory === "Clothing"
-                    ) {
+                        // ======================================
+                        // FOOTWEAR
+                        // ======================================
+
+                        if (
+                            selectedCategory ===
+                            "Footwear"
+                        ) {
+
+                            return (
+
+                                // Main category
+                                category === "footwear" ||
+                                category === "footwears" ||
+
+                                // Shoes
+                                category === "shoe" ||
+                                category === "shoes" ||
+
+                                // Sub category
+                                subCategory === "footwear" ||
+                                subCategory === "footwears" ||
+                                subCategory === "shoe" ||
+                                subCategory === "shoes" ||
+
+                                // Product type
+                                type === "footwear" ||
+                                type === "footwears" ||
+                                type === "shoe" ||
+                                type === "shoes" ||
+
+                                // Footwear types
+                                subCategory === "sneakers" ||
+                                subCategory === "sandals" ||
+                                subCategory === "heels" ||
+                                subCategory === "boots" ||
+                                subCategory === "slippers" ||
+                                subCategory === "running shoes" ||
+                                subCategory === "lifestyle shoes" ||
+                                subCategory === "casual shoes" ||
+                                subCategory === "sports shoes"
+
+                            );
+
+                        }
+
+                        // ======================================
+                        // WATCH
+                        // ======================================
+
+                        if (
+                            selectedCategory ===
+                            "Watch"
+                        ) {
+
+                            return (
+
+                                category === "watch" ||
+                                category === "watches" ||
+
+                                subCategory === "watch" ||
+                                subCategory === "watches" ||
+
+                                type === "watch" ||
+                                type === "watches"
+
+                            );
+
+                        }
+
+                        // ======================================
+                        // PERFUME
+                        // ======================================
+
+                        if (
+                            selectedCategory ===
+                            "Perfume"
+                        ) {
+
+                            return (
+
+                                category === "perfume" ||
+                                category === "perfumes" ||
+
+                                subCategory === "perfume" ||
+                                subCategory === "perfumes" ||
+
+                                type === "perfume" ||
+                                type === "perfumes"
+
+                            );
+
+                        }
+
+                        // ======================================
+                        // GROCERY
+                        // ======================================
+
+                        if (
+                            selectedCategory ===
+                            "Grocery"
+                        ) {
+
+                            return (
+
+                                category === "grocery" ||
+                                category === "groceries" ||
+
+                                subCategory === "grocery" ||
+                                subCategory === "groceries" ||
+
+                                type === "grocery" ||
+                                type === "groceries"
+
+                            );
+
+                        }
+
+                        // ======================================
+                        // OTHER CATEGORIES
+                        // ======================================
 
                         return (
-                            category === "men" ||
-                            category === "women" ||
-                            category === "kids" ||
-                            category === "clothing" ||
-                            category === "clothes"
+
+                            category === selected ||
+                            subCategory === selected ||
+                            type === selected
+
                         );
 
                     }
-
-
-                    // ======================================
-                    // FOOTWEAR
-                    // ======================================
-
-                    if (
-                        selectedCategory === "Footwear"
-                    ) {
-
-                        return (
-
-                            category === "footwear" ||
-                            category === "footwears" ||
-                            category === "shoe" ||
-                            category === "shoes" ||
-
-                            subCategory === "footwear" ||
-                            subCategory === "footwears" ||
-                            subCategory === "shoe" ||
-                            subCategory === "shoes" ||
-
-                            type === "footwear" ||
-                            type === "footwears" ||
-                            type === "shoe" ||
-                            type === "shoes"
-
-                        );
-
-                    }
-
-
-                    // ======================================
-                    // WATCH
-                    // ======================================
-
-                    if (
-                        selectedCategory === "Watch"
-                    ) {
-
-                        return (
-
-                            category === "watch" ||
-                            category === "watches" ||
-
-                            subCategory === "watch" ||
-                            subCategory === "watches" ||
-
-                            type === "watch" ||
-                            type === "watches"
-
-                        );
-
-                    }
-
-
-                    // ======================================
-                    // PERFUME
-                    // ======================================
-
-                    if (
-                        selectedCategory === "Perfume"
-                    ) {
-
-                        return (
-
-                            category === "perfume" ||
-                            category === "perfumes" ||
-
-                            subCategory === "perfume" ||
-                            subCategory === "perfumes" ||
-
-                            type === "perfume" ||
-                            type === "perfumes"
-
-                        );
-
-                    }
-
-
-                    // ======================================
-                    // GROCERY
-                    // ======================================
-
-                    if (
-                        selectedCategory === "Grocery"
-                    ) {
-
-                        return (
-
-                            category === "grocery" ||
-                            category === "groceries" ||
-
-                            subCategory === "grocery" ||
-                            subCategory === "groceries" ||
-
-                            type === "grocery" ||
-                            type === "groceries"
-
-                        );
-
-                    }
-
-
-                    // ======================================
-                    // OTHER CATEGORIES
-                    // ======================================
-
-                    return (
-
-                        category === selected ||
-                        subCategory === selected ||
-                        type === selected
-
-                    );
-
-                });
+                );
 
         }
-
 
         return result;
 
@@ -342,41 +360,29 @@ const Collection = () => {
         selectedCategory,
     ]);
 
-
     // ======================================================
     // CLEAR FILTER
     // ======================================================
 
     const clearFilters = () => {
 
-        setSelectedCategory("All");
+        setSelectedCategory(
+            "All"
+        );
 
     };
 
-
     // ======================================================
-    // CATEGORY NAVIGATION
+    // CATEGORY CLICK
     // ======================================================
 
-    const handleCategoryClick = (category) => {
+    const handleCategoryClick = (
+        category
+    ) => {
 
         // ================================================
-        // FOOTWEAR
-        // ================================================
-
-        if (
-            category.value === "Footwear"
-        ) {
-
-            navigate("/footwear");
-
-            return;
-
-        }
-
-
-        // ================================================
-        // OTHER CATEGORIES
+        // IMPORTANT:
+        // FOOTWEAR NOW STAYS INSIDE COLLECTION
         // ================================================
 
         setSelectedCategory(
@@ -385,6 +391,43 @@ const Collection = () => {
 
     };
 
+    // ======================================================
+    // GET IMAGE URL
+    // ======================================================
+
+    const getImageUrl = (image) => {
+
+        if (!image) {
+            return "";
+        }
+
+        // Local imported Vite image
+        if (
+            typeof image === "string" &&
+            (
+                image.startsWith("blob:") ||
+                image.startsWith("data:") ||
+                image.includes("/assets/") ||
+                image.includes("assets/")
+            )
+        ) {
+            return image;
+        }
+
+        // Backend full URL
+        if (
+            typeof image === "string" &&
+            (
+                image.startsWith("http://") ||
+                image.startsWith("https://")
+            )
+        ) {
+            return image;
+        }
+
+        return image;
+
+    };
 
     // ======================================================
     // RENDER
@@ -393,7 +436,6 @@ const Collection = () => {
     return (
 
         <main className="collection-page">
-
 
             {/* ==================================================
                 TOP HEADER
@@ -407,12 +449,14 @@ const Collection = () => {
                         THE FOREVER EDIT · 01
                     </p>
 
-
                     <h1>
 
-                        {selectedCategory === "All"
-                            ? "All"
-                            : selectedCategory}
+                        {
+                            selectedCategory ===
+                            "All"
+                                ? "All"
+                                : selectedCategory
+                        }
 
                         <span>
                             {" "}Collections
@@ -420,14 +464,13 @@ const Collection = () => {
 
                     </h1>
 
-
                     <p className="collection-subtitle">
-                        Explore timeless pieces selected for
-                        everyday elegance, comfort and style.
+                        Explore timeless pieces selected
+                        for everyday elegance, comfort
+                        and style.
                     </p>
 
                 </div>
-
 
                 <div className="collection-total">
 
@@ -435,22 +478,18 @@ const Collection = () => {
                         SHOWING
                     </span>
 
-
                     <strong>
-
                         {String(
                             filteredProducts.length
                         ).padStart(
                             2,
                             "0"
                         )}
-
                     </strong>
 
                 </div>
 
             </section>
-
 
             {/* ==================================================
                 MAIN COLLECTION AREA
@@ -458,13 +497,11 @@ const Collection = () => {
 
             <section className="collection-layout">
 
-
                 {/* ==================================================
                     FILTER SIDEBAR
                 ================================================== */}
 
                 <aside className="collection-filter">
-
 
                     {/* FILTER HEADER */}
 
@@ -476,13 +513,11 @@ const Collection = () => {
                                 REFINE
                             </p>
 
-
                             <h2>
                                 Filters
                             </h2>
 
                         </div>
-
 
                         <span className="filter-star">
                             ✦
@@ -490,13 +525,11 @@ const Collection = () => {
 
                     </div>
 
-
                     {/* ==================================================
                         CATEGORY
                     ================================================== */}
 
                     <div className="filter-section">
-
 
                         <div className="filter-section-title">
 
@@ -504,34 +537,31 @@ const Collection = () => {
                                 CATEGORY
                             </span>
 
-
                             <small>
-
-                                {selectedCategory === "All"
-                                    ? "01"
-                                    : "02"}
-
+                                {
+                                    selectedCategory ===
+                                    "All"
+                                        ? "01"
+                                        : "02"
+                                }
                             </small>
 
                         </div>
 
-
                         <div className="category-list">
 
-
                             {/* ==================================================
-                                ALL COLLECTIONS
+                                ALL
                             ================================================== */}
 
                             <button
                                 type="button"
-
                                 className={`category-button ${
-                                    selectedCategory === "All"
+                                    selectedCategory ===
+                                    "All"
                                         ? "active"
                                         : ""
                                 }`}
-
                                 onClick={() => {
 
                                     setSelectedCategory(
@@ -545,13 +575,11 @@ const Collection = () => {
                                     ✦
                                 </span>
 
-
                                 <span>
                                     All Collections
                                 </span>
 
                             </button>
-
 
                             {/* ==================================================
                                 CATEGORY BUTTONS
@@ -561,19 +589,16 @@ const Collection = () => {
                                 (category) => (
 
                                     <button
-                                        type="button"
-
                                         key={
                                             category.value
                                         }
-
+                                        type="button"
                                         className={`category-button ${
                                             selectedCategory ===
                                             category.value
                                                 ? "active"
                                                 : ""
                                         }`}
-
                                         onClick={() =>
                                             handleCategoryClick(
                                                 category
@@ -586,7 +611,6 @@ const Collection = () => {
                                                 category.icon
                                             }
                                         </span>
-
 
                                         <span>
                                             {
@@ -603,7 +627,6 @@ const Collection = () => {
 
                     </div>
 
-
                     {/* ==================================================
                         CLEAR FILTER
                     ================================================== */}
@@ -613,22 +636,17 @@ const Collection = () => {
 
                         <button
                             type="button"
-
                             className="clear-filter-button"
-
                             onClick={
                                 clearFilters
                             }
                         >
-
                             CLEAR ALL FILTERS
-
                         </button>
 
                     )}
 
                 </aside>
-
 
                 {/* ==================================================
                     PRODUCTS AREA
@@ -636,10 +654,7 @@ const Collection = () => {
 
                 <div className="collection-products-area">
 
-
-                    {/* ==================================================
-                        PRODUCT HEADER
-                    ================================================== */}
+                    {/* PRODUCT HEADER */}
 
                     <div className="products-topbar">
 
@@ -647,13 +662,14 @@ const Collection = () => {
 
                             <p>
 
-                                {selectedCategory ===
+                                {
+                                    selectedCategory ===
                                     "All"
-                                    ? "ALL COLLECTIONS"
-                                    : `${selectedCategory.toUpperCase()} COLLECTION`}
+                                        ? "ALL COLLECTIONS"
+                                        : `${selectedCategory.toUpperCase()} COLLECTION`
+                                }
 
                             </p>
-
 
                             <span>
 
@@ -674,7 +690,6 @@ const Collection = () => {
 
                     </div>
 
-
                     {/* ==================================================
                         PRODUCT GRID
                     ================================================== */}
@@ -684,212 +699,208 @@ const Collection = () => {
 
                         <div className="collection-product-grid">
 
-
                             {filteredProducts.map(
                                 (
                                     item,
                                     index
-                                ) => (
+                                ) => {
 
-                                    <Link
-                                        to={`/product/${item._id}`}
-
-                                        key={
-                                            item._id ||
-                                            index
-                                        }
-
-                                        className="collection-product-card"
-                                    >
-
-
-                                        {/* ================================
-                                            IMAGE
-                                        ================================= */}
-
-                                        <div className="collection-image-wrapper">
-
-
-                                            {Array.isArray(
-                                                item.image
-                                            ) &&
+                                    const image =
+                                        Array.isArray(
                                             item.image
-                                                .length >
-                                                0 ? (
+                                        )
+                                            ? item.image[0]
+                                            : item.image;
 
-                                                <img
-                                                    src={
-                                                        item.image[0]
-                                                    }
+                                    return (
 
-                                                    alt={
-                                                        item.name ||
-                                                        "Product"
-                                                    }
+                                        <Link
+                                            to={
+                                                item._id
+                                                    ? `/product/${item._id}`
+                                                    : "#"
+                                            }
+                                            key={
+                                                item._id ||
+                                                index
+                                            }
+                                            className="collection-product-card"
+                                            onClick={(event) => {
 
-                                                    className="collection-product-image"
-                                                />
+                                                if (
+                                                    !item._id
+                                                ) {
+                                                    event.preventDefault();
+                                                }
 
-                                            ) : (
+                                            }}
+                                        >
 
-                                                <div className="collection-no-image">
+                                            {/* IMAGE */}
 
-                                                    NO IMAGE
+                                            <div className="collection-image-wrapper">
 
-                                                </div>
+                                                {image ? (
 
-                                            )}
+                                                    <img
+                                                        src={
+                                                            getImageUrl(
+                                                                image
+                                                            )
+                                                        }
+                                                        alt={
+                                                            item.name ||
+                                                            "Product"
+                                                        }
+                                                        className="collection-product-image"
+                                                    />
 
+                                                ) : (
 
-                                            {/* PRODUCT NUMBER */}
+                                                    <div className="collection-no-image">
+                                                        NO IMAGE
+                                                    </div>
 
-                                            <span className="product-number">
-
-                                                {String(
-                                                    index +
-                                                    1
-                                                ).padStart(
-                                                    2,
-                                                    "0"
                                                 )}
 
-                                            </span>
+                                                {/* PRODUCT NUMBER */}
 
+                                                <span className="product-number">
 
-                                            {/* VIEW PRODUCT */}
+                                                    {String(
+                                                        index +
+                                                        1
+                                                    ).padStart(
+                                                        2,
+                                                        "0"
+                                                    )}
 
-                                            <span className="product-view">
+                                                </span>
 
-                                                VIEW PRODUCT
+                                                {/* VIEW PRODUCT */}
 
-                                            </span>
+                                                <span className="product-view">
 
-                                        </div>
+                                                    VIEW PRODUCT
 
-
-                                        {/* ================================
-                                            PRODUCT INFO
-                                        ================================= */}
-
-                                        <div className="collection-product-info">
-
-
-                                            <div>
-
-                                                <h3>
-
-                                                    {
-                                                        item.name
-                                                    }
-
-                                                </h3>
-
-
-                                                <p>
-
-                                                    {
-                                                        item.subCategory ||
-                                                        item.subcategory ||
-                                                        item.category ||
-                                                        "Collection"
-                                                    }
-
-                                                </p>
+                                                </span>
 
                                             </div>
 
+                                            {/* PRODUCT INFO */}
 
-                                            <strong>
+                                            <div className="collection-product-info">
 
-                                                {
-                                                    currency
-                                                }
+                                                <div>
 
-                                                {
-                                                    item.price
-                                                }
+                                                    <h3>
+                                                        {
+                                                            item.name
+                                                        }
+                                                    </h3>
 
-                                            </strong>
+                                                    <p>
+                                                        {
+                                                            item.subCategory ||
+                                                            item.subcategory ||
+                                                            item.productType ||
+                                                            item.category ||
+                                                            "Collection"
+                                                        }
+                                                    </p>
 
-                                        </div>
+                                                </div>
 
-                                    </Link>
+                                                <strong>
 
-                                )
+                                                    {
+                                                        currency
+                                                    }
+
+                                                    {
+                                                        Number(
+                                                            item.price ||
+                                                            0
+                                                        ).toLocaleString(
+                                                            "en-IN"
+                                                        )
+                                                    }
+
+                                                </strong>
+
+                                            </div>
+
+                                        </Link>
+
+                                    );
+
+                                }
                             )}
 
                         </div>
 
                     ) : (
 
-
                         /* ==================================================
-                            EMPTY COLLECTION
+                           EMPTY COLLECTION
                         ================================================== */
 
                         <div className="collection-empty">
 
-
                             <div className="empty-icon">
 
-                                {selectedCategory ===
-                                "Footwear"
-                                    ? "👟"
-
-                                    : selectedCategory ===
-                                      "Perfume"
-                                    ? "🌸"
-
-                                    : selectedCategory ===
-                                      "Grocery"
-                                    ? "🛒"
-
-                                    : selectedCategory ===
-                                      "Watch"
-                                    ? "⌚"
-
-                                    : "✦"}
+                                {
+                                    selectedCategory ===
+                                    "Footwear"
+                                        ? "👟"
+                                        : selectedCategory ===
+                                          "Perfume"
+                                        ? "🌸"
+                                        : selectedCategory ===
+                                          "Grocery"
+                                        ? "🛒"
+                                        : selectedCategory ===
+                                          "Watch"
+                                        ? "⌚"
+                                        : "✦"
+                                }
 
                             </div>
-
 
                             <p>
                                 NO PRODUCTS FOUND
                             </p>
 
-
                             <h2>
                                 Nothing here yet.
                             </h2>
 
-
                             <span>
 
-                                {selectedCategory ===
-                                "Footwear"
+                                {
+                                    selectedCategory ===
+                                    "Footwear"
 
-                                    ? "Add footwear products from your admin panel with category set to Footwear or Shoes."
+                                        ? "No footwear products were found."
 
-                                    : selectedCategory ===
-                                      "Watch"
+                                        : selectedCategory ===
+                                          "Watch"
 
-                                    ? "No watch products were found. Make sure the product category is set to Watch."
+                                        ? "No watch products were found."
 
-                                    : "Try another category or clear your current filter."}
+                                        : "Try another category or clear your current filter."
+
+                                }
 
                             </span>
 
-
                             <button
                                 type="button"
-
                                 onClick={
                                     clearFilters
                                 }
                             >
-
                                 VIEW ALL COLLECTIONS
-
                             </button>
 
                         </div>
@@ -905,6 +916,5 @@ const Collection = () => {
     );
 
 };
-
 
 export default Collection;

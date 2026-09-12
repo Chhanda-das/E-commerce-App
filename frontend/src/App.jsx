@@ -19,7 +19,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import TrackOrder from "./pages/TrackOrder";
 import Verify from "./pages/Verify";
-import Footwear from "./pages/Footwear";
+
 
 const App = () => {
     return (
@@ -40,11 +40,7 @@ const App = () => {
                     element={<Collection />}
                 />
 
-                {/* Footwear */}
-                <Route
-                    path="/footwear"
-                    element={<Footwear />}
-                />
+                
 
                 {/* Product */}
                 <Route
