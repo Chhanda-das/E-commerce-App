@@ -8,9 +8,7 @@ import React, {
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 export const AdminContext = createContext();
-
 
 const AdminContextProvider = ({ children }) => {
 
@@ -448,21 +446,49 @@ const AdminContextProvider = ({ children }) => {
 
     };
 
+
     // ======================================================
     // ADMIN LOGOUT
     // ======================================================
 
     const logout = useCallback(() => {
 
-        localStorage.removeItem("adminToken");
+        console.log(
+            "ADMIN LOGOUT"
+        );
+
+
+        // --------------------------------------------------
+        // REMOVE TOKEN
+        // --------------------------------------------------
+
+        localStorage.removeItem(
+            "adminToken"
+        );
+
+
+        // --------------------------------------------------
+        // CLEAR ADMIN STATE
+        // --------------------------------------------------
 
         setToken("");
+
         setProducts([]);
+
         setOrders([]);
 
-        toast.success("Logged out successfully");
+
+        // --------------------------------------------------
+        // MESSAGE
+        // --------------------------------------------------
+
+        toast.success(
+            "Logged out successfully"
+        );
+
 
     }, []);
+
 
     // ======================================================
     // ADD PRODUCT
@@ -934,6 +960,7 @@ const AdminContextProvider = ({ children }) => {
                     setOrders([]);
 
                 }
+
 
             } finally {
 
