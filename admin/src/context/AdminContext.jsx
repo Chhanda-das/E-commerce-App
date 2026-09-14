@@ -448,64 +448,21 @@ const AdminContextProvider = ({ children }) => {
 
     };
 
-
     // ======================================================
     // ADMIN LOGOUT
     // ======================================================
 
-    const logout = useCallback(async () => {
+    const logout = useCallback(() => {
 
-        try {
+        localStorage.removeItem("adminToken");
 
-            // If your backend has an admin logout route,
-            // this will clear the cookie.
+        setToken("");
+        setProducts([]);
+        setOrders([]);
 
-            await axios.post(
-                `${backendUrl}/api/user/admin-logout`,
-                {},
-                {
-                    withCredentials: true,
-                }
-            );
+        toast.success("Logged out successfully");
 
-        } catch (error) {
-
-            console.log(
-                "ADMIN LOGOUT REQUEST:",
-                error.response?.data ||
-                error.message
-            );
-
-        } finally {
-
-            // --------------------------------------------------
-            // REMOVE LOCAL TOKEN
-            // --------------------------------------------------
-
-            localStorage.removeItem(
-                "adminToken"
-            );
-
-
-            // --------------------------------------------------
-            // CLEAR STATE
-            // --------------------------------------------------
-
-            setToken("");
-
-            setProducts([]);
-
-            setOrders([]);
-
-
-            toast.success(
-                "Logged out successfully"
-            );
-
-        }
-
-    }, [backendUrl]);
-
+    }, []);
 
     // ======================================================
     // ADD PRODUCT
