@@ -1,6 +1,8 @@
+
 import React, {
     useContext,
-    useState
+    useState,
+    useEffect
 } from "react";
 
 import axios from "axios";
@@ -15,6 +17,7 @@ import { assets } from "../assets/assets";
 
 import "./css/Navbar.css";
 
+
 const Navbar = () => {
 
     // ==========================================
@@ -25,6 +28,10 @@ const Navbar = () => {
     const [profileOpen, setProfileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
+
+    // LOGIN STATE
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
     // ==========================================
     // SHOP CONTEXT
@@ -39,6 +46,32 @@ const Navbar = () => {
         setCartItems
     } = useContext(ShopContext);
 
+
+    // ==========================================
+    // CHECK LOGIN STATUS
+    // ==========================================
+
+    useEffect(() => {
+
+        const checkLogin = () => {
+
+            const token = localStorage.getItem("token");
+
+            setIsLoggedIn(!!token);
+        };
+
+        checkLogin();
+
+        // Listen for login/logout changes
+        window.addEventListener("storage", checkLogin);
+
+        return () => {
+            window.removeEventListener("storage", checkLogin);
+        };
+
+    }, []);
+
+
     // ==========================================
     // NAV LINK STYLE
     // ==========================================
@@ -50,11 +83,13 @@ const Navbar = () => {
                 : ""
         }`;
 
+
     // ==========================================
     // OPEN SEARCH
     // ==========================================
 
     const openSearch = () => {
+
         setProfileOpen(false);
         setVisible(false);
         setSearchOpen(true);
@@ -64,11 +99,13 @@ const Navbar = () => {
         }
     };
 
+
     // ==========================================
     // CLOSE SEARCH
     // ==========================================
 
     const closeSearch = () => {
+
         setSearchOpen(false);
         setSearchValue("");
 
@@ -81,11 +118,13 @@ const Navbar = () => {
         }
     };
 
+
     // ==========================================
     // SEARCH HANDLER
     // ==========================================
 
     const handleSearch = (event) => {
+
         const value = event.target.value;
 
         setSearchValue(value);
@@ -95,17 +134,21 @@ const Navbar = () => {
         }
     };
 
+
     // ==========================================
     // SUBMIT SEARCH
     // ==========================================
 
     const submitSearch = (event) => {
+
         event.preventDefault();
 
         const value = searchValue.trim();
 
         if (!value) {
+
             navigate("/collection");
+
             return;
         }
 
@@ -122,39 +165,55 @@ const Navbar = () => {
         navigate("/collection");
     };
 
+
     // ==========================================
     // PROFILE
     // ==========================================
 
     const toggleProfile = () => {
+
         setProfileOpen((prev) => !prev);
     };
 
+
     const closeProfileMenu = () => {
+
         setProfileOpen(false);
     };
 
+
     const goToProfile = () => {
+
         closeProfileMenu();
+
         navigate("/profile");
     };
 
+
     const goToOrders = () => {
+
         closeProfileMenu();
+
         navigate("/orders");
     };
 
+
     const goToLogin = () => {
+
         closeProfileMenu();
+
         navigate("/login");
     };
+
 
     // ==========================================
     // LOGOUT
     // ==========================================
 
     const logout = async () => {
+
         try {
+
             await axios.post(
                 `${backendUrl}/api/user/logout`,
                 {},
@@ -162,38 +221,55 @@ const Navbar = () => {
                     withCredentials: true
                 }
             );
+
         } catch (error) {
+
             console.error(
                 "LOGOUT ERROR:",
                 error
             );
+
         } finally {
+
+            // Clear cart
             if (setCartItems) {
                 setCartItems({});
             }
 
+            // Remove token
             localStorage.removeItem("token");
 
+            // Update navbar immediately
+            setIsLoggedIn(false);
+
+            // Close profile menu
             setProfileOpen(false);
 
+            // Go to login page
             navigate("/login", {
                 replace: true
             });
         }
     };
 
+
     // ==========================================
     // MOBILE MENU
     // ==========================================
 
     const openMobileMenu = () => {
+
         setProfileOpen(false);
+
         setVisible(true);
     };
 
+
     const closeMobileMenu = () => {
+
         setVisible(false);
     };
+
 
     // ==========================================
     // RETURN
@@ -215,12 +291,15 @@ const Navbar = () => {
                         to="/"
                         className="navbar-logo-link"
                     >
+
                         <img
                             src={assets.logo}
                             className="navbar-logo"
                             alt="Forever"
                         />
+
                     </Link>
+
 
                     {/* ==================================
                         DESKTOP MENU
@@ -232,37 +311,59 @@ const Navbar = () => {
                             to="/"
                             className={navLinkStyle}
                         >
-                            <span>HOME</span>
+
+                            <span>
+                                HOME
+                            </span>
+
                             <i></i>
+
                         </NavLink>
+
 
                         <NavLink
                             to="/collection"
                             className={navLinkStyle}
                         >
+
                             <span>
                                 COLLECTION
                             </span>
+
                             <i></i>
+
                         </NavLink>
+
 
                         <NavLink
                             to="/about"
                             className={navLinkStyle}
                         >
-                            <span>ABOUT</span>
+
+                            <span>
+                                ABOUT
+                            </span>
+
                             <i></i>
+
                         </NavLink>
+
 
                         <NavLink
                             to="/contact"
                             className={navLinkStyle}
                         >
-                            <span>CONTACT</span>
+
+                            <span>
+                                CONTACT
+                            </span>
+
                             <i></i>
+
                         </NavLink>
 
                     </nav>
+
 
                     {/* ==================================
                         MOBILE TOP MENU
@@ -298,6 +399,7 @@ const Navbar = () => {
                             HOME
                         </NavLink>
 
+
                         <NavLink
                             to="/collection"
                             className={({ isActive }) =>
@@ -316,6 +418,7 @@ const Navbar = () => {
                             COLLECTION
                         </NavLink>
 
+
                         <NavLink
                             to="/about"
                             className={({ isActive }) =>
@@ -333,6 +436,7 @@ const Navbar = () => {
                         >
                             ABOUT
                         </NavLink>
+
 
                         <NavLink
                             to="/contact"
@@ -354,11 +458,13 @@ const Navbar = () => {
 
                     </nav>
 
+
                     {/* ==================================
                         RIGHT ACTIONS
                     ================================== */}
 
                     <div className="navbar-actions">
+
 
                         {/* SEARCH */}
 
@@ -368,11 +474,14 @@ const Navbar = () => {
                             onClick={openSearch}
                             aria-label="Search"
                         >
+
                             <img
                                 src={assets.search_icon}
                                 alt="Search"
                             />
+
                         </button>
+
 
                         {/* PROFILE */}
 
@@ -383,19 +492,19 @@ const Navbar = () => {
                                 className="navbar-icon-button"
                                 onClick={toggleProfile}
                                 aria-label="Profile menu"
-                                aria-expanded={
-                                    profileOpen
-                                }
+                                aria-expanded={profileOpen}
                             >
+
                                 <img
-                                    src={
-                                        assets.profile_icon
-                                    }
+                                    src={assets.profile_icon}
                                     alt="Profile"
                                 />
+
                             </button>
 
+
                             {profileOpen && (
+
                                 <div
                                     className="
                                         absolute
@@ -411,82 +520,99 @@ const Navbar = () => {
                                     "
                                 >
 
-                                    <button
-                                        type="button"
-                                        onClick={
-                                            goToProfile
-                                        }
-                                        className="
-                                            w-full
-                                            text-left
-                                            px-5
-                                            py-3
-                                            text-sm
-                                            text-gray-800
-                                            hover:bg-gray-50
-                                        "
-                                    >
-                                        👤 Profile
-                                    </button>
+                                    {/* ==================================
+                                        LOGGED IN MENU
+                                    ================================== */}
 
-                                    <button
-                                        type="button"
-                                        onClick={
-                                            goToOrders
-                                        }
-                                        className="
-                                            w-full
-                                            text-left
-                                            px-5
-                                            py-3
-                                            text-sm
-                                            text-gray-800
-                                            hover:bg-gray-50
-                                        "
-                                    >
-                                        📦 My Orders
-                                    </button>
+                                    {isLoggedIn ? (
 
-                                    <div className="border-t border-gray-100"></div>
+                                        <>
 
-                                    <button
-                                        type="button"
-                                        onClick={
-                                            goToLogin
-                                        }
-                                        className="
-                                            w-full
-                                            text-left
-                                            px-5
-                                            py-3
-                                            text-sm
-                                            text-gray-800
-                                            hover:bg-gray-50
-                                        "
-                                    >
-                                        🔐 Sign In
-                                    </button>
+                                            <button
+                                                type="button"
+                                                onClick={goToProfile}
+                                                className="
+                                                    w-full
+                                                    text-left
+                                                    px-5
+                                                    py-3
+                                                    text-sm
+                                                    text-gray-800
+                                                    hover:bg-gray-50
+                                                "
+                                            >
+                                                👤 Profile
+                                            </button>
 
-                                    <button
-                                        type="button"
-                                        onClick={logout}
-                                        className="
-                                            w-full
-                                            text-left
-                                            px-5
-                                            py-3
-                                            text-sm
-                                            text-red-600
-                                            hover:bg-red-50
-                                        "
-                                    >
-                                        🚪 Logout
-                                    </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={goToOrders}
+                                                className="
+                                                    w-full
+                                                    text-left
+                                                    px-5
+                                                    py-3
+                                                    text-sm
+                                                    text-gray-800
+                                                    hover:bg-gray-50
+                                                "
+                                            >
+                                                📦 My Orders
+                                            </button>
+
+
+                                            <div className="border-t border-gray-100"></div>
+
+
+                                            <button
+                                                type="button"
+                                                onClick={logout}
+                                                className="
+                                                    w-full
+                                                    text-left
+                                                    px-5
+                                                    py-3
+                                                    text-sm
+                                                    text-red-600
+                                                    hover:bg-red-50
+                                                "
+                                            >
+                                                🚪 Logout
+                                            </button>
+
+                                        </>
+
+                                    ) : (
+
+                                        /* ==================================
+                                            LOGGED OUT MENU
+                                        ================================== */
+
+                                        <button
+                                            type="button"
+                                            onClick={goToLogin}
+                                            className="
+                                                w-full
+                                                text-left
+                                                px-5
+                                                py-3
+                                                text-sm
+                                                text-gray-800
+                                                hover:bg-gray-50
+                                            "
+                                        >
+                                            🔐 Sign In
+                                        </button>
+
+                                    )}
 
                                 </div>
+
                             )}
 
                         </div>
+
 
                         {/* CART */}
 
@@ -494,31 +620,32 @@ const Navbar = () => {
                             to="/cart"
                             className="navbar-cart"
                         >
+
                             <img
-                                src={
-                                    assets.cart_icon
-                                }
+                                src={assets.cart_icon}
                                 alt="Cart"
                             />
 
                             <span>
                                 {getCartCount()}
                             </span>
+
                         </Link>
+
 
                         {/* MOBILE MENU BUTTON */}
 
                         <button
                             type="button"
                             className="navbar-mobile-button"
-                            onClick={
-                                openMobileMenu
-                            }
+                            onClick={openMobileMenu}
                             aria-label="Open menu"
                         >
+
                             <span></span>
                             <span></span>
                             <span></span>
+
                         </button>
 
                     </div>
@@ -527,11 +654,13 @@ const Navbar = () => {
 
             </header>
 
+
             {/* ======================================
                 SEARCH OVERLAY
             ====================================== */}
 
             {searchOpen && (
+
                 <div
                     className="
                         fixed
@@ -573,9 +702,7 @@ const Navbar = () => {
                         >
 
                             <img
-                                src={
-                                    assets.search_icon
-                                }
+                                src={assets.search_icon}
                                 alt="Search"
                                 className="
                                     w-5
@@ -583,14 +710,11 @@ const Navbar = () => {
                                 "
                             />
 
+
                             <input
                                 type="text"
-                                value={
-                                    searchValue
-                                }
-                                onChange={
-                                    handleSearch
-                                }
+                                value={searchValue}
+                                onChange={handleSearch}
                                 autoFocus
                                 placeholder="Search products..."
                                 className="
@@ -601,11 +725,10 @@ const Navbar = () => {
                                 "
                             />
 
+
                             <button
                                 type="button"
-                                onClick={
-                                    closeSearch
-                                }
+                                onClick={closeSearch}
                                 className="
                                     text-2xl
                                     text-gray-500
@@ -617,6 +740,7 @@ const Navbar = () => {
                             </button>
 
                         </div>
+
 
                         <button
                             type="submit"
@@ -636,23 +760,26 @@ const Navbar = () => {
                     </form>
 
                 </div>
+
             )}
+
 
             {/* ======================================
                 MOBILE SIDEBAR
             ====================================== */}
 
             {visible && (
+
                 <div className="mobile-sidebar-overlay">
 
                     <div
                         className="mobile-sidebar-backdrop"
-                        onClick={
-                            closeMobileMenu
-                        }
+                        onClick={closeMobileMenu}
                     ></div>
 
+
                     <aside className="mobile-sidebar">
+
 
                         <div className="mobile-sidebar-header">
 
@@ -660,11 +787,10 @@ const Navbar = () => {
                                 FOREVER
                             </span>
 
+
                             <button
                                 type="button"
-                                onClick={
-                                    closeMobileMenu
-                                }
+                                onClick={closeMobileMenu}
                                 aria-label="Close menu"
                             >
                                 ×
@@ -672,179 +798,230 @@ const Navbar = () => {
 
                         </div>
 
+
                         <div className="mobile-sidebar-menu">
+
 
                             <NavLink
                                 to="/"
-                                onClick={
-                                    closeMobileMenu
-                                }
+                                onClick={closeMobileMenu}
                                 className="mobile-nav-link"
                             >
+
                                 <span className="mobile-nav-number">
                                     01
                                 </span>
+
                                 <span>
                                     HOME
                                 </span>
+
                                 <b>→</b>
+
                             </NavLink>
+
 
                             <NavLink
                                 to="/collection"
-                                onClick={
-                                    closeMobileMenu
-                                }
+                                onClick={closeMobileMenu}
                                 className="mobile-nav-link"
                             >
+
                                 <span className="mobile-nav-number">
                                     02
                                 </span>
+
                                 <span>
                                     COLLECTION
                                 </span>
+
                                 <b>→</b>
+
                             </NavLink>
+
 
                             <NavLink
                                 to="/about"
-                                onClick={
-                                    closeMobileMenu
-                                }
+                                onClick={closeMobileMenu}
                                 className="mobile-nav-link"
                             >
+
                                 <span className="mobile-nav-number">
                                     03
                                 </span>
+
                                 <span>
                                     ABOUT
                                 </span>
+
                                 <b>→</b>
+
                             </NavLink>
+
 
                             <NavLink
                                 to="/contact"
-                                onClick={
-                                    closeMobileMenu
-                                }
+                                onClick={closeMobileMenu}
                                 className="mobile-nav-link"
                             >
+
                                 <span className="mobile-nav-number">
                                     04
                                 </span>
+
                                 <span>
                                     CONTACT
                                 </span>
+
                                 <b>→</b>
+
                             </NavLink>
+
 
                             <NavLink
                                 to="/footwear"
-                                onClick={
-                                    closeMobileMenu
-                                }
+                                onClick={closeMobileMenu}
                                 className="mobile-nav-link"
                             >
+
                                 <span className="mobile-nav-number">
                                     05
                                 </span>
+
                                 <span>
                                     FOOTWEAR
                                 </span>
+
                                 <b>→</b>
+
                             </NavLink>
 
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    closeMobileMenu();
-                                    navigate(
-                                        "/profile"
-                                    );
-                                }}
-                                className="mobile-nav-link"
-                            >
-                                <span className="mobile-nav-number">
-                                    06
-                                </span>
-                                <span>
-                                    PROFILE
-                                </span>
-                                <b>→</b>
-                            </button>
+
+                            {/* ==================================
+                                MOBILE AUTH MENU
+                            ================================== */}
+
+                            {isLoggedIn ? (
+
+                                <>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            closeMobileMenu();
+                                            navigate("/profile");
+                                        }}
+                                        className="mobile-nav-link"
+                                    >
+
+                                        <span className="mobile-nav-number">
+                                            06
+                                        </span>
+
+                                        <span>
+                                            PROFILE
+                                        </span>
+
+                                        <b>→</b>
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            closeMobileMenu();
+                                            navigate("/orders");
+                                        }}
+                                        className="mobile-nav-link"
+                                    >
+
+                                        <span className="mobile-nav-number">
+                                            07
+                                        </span>
+
+                                        <span>
+                                            MY ORDERS
+                                        </span>
+
+                                        <b>→</b>
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            closeMobileMenu();
+                                            logout();
+                                        }}
+                                        className="mobile-nav-link"
+                                    >
+
+                                        <span className="mobile-nav-number">
+                                            08
+                                        </span>
+
+                                        <span>
+                                            LOGOUT
+                                        </span>
+
+                                        <b>→</b>
+
+                                    </button>
+
+                                </>
+
+                            ) : (
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        closeMobileMenu();
+                                        navigate("/login");
+                                    }}
+                                    className="mobile-nav-link"
+                                >
+
+                                    <span className="mobile-nav-number">
+                                        06
+                                    </span>
+
+                                    <span>
+                                        SIGN IN
+                                    </span>
+
+                                    <b>→</b>
+
+                                </button>
+
+                            )}
+
 
                             <button
                                 type="button"
                                 onClick={() => {
                                     closeMobileMenu();
-                                    navigate(
-                                        "/orders"
-                                    );
+                                    openSearch();
                                 }}
                                 className="mobile-nav-link"
                             >
-                                <span className="mobile-nav-number">
-                                    07
-                                </span>
-                                <span>
-                                    MY ORDERS
-                                </span>
-                                <b>→</b>
-                            </button>
 
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    closeMobileMenu();
-                                    navigate(
-                                        "/login"
-                                    );
-                                }}
-                                className="mobile-nav-link"
-                            >
-                                <span className="mobile-nav-number">
-                                    08
-                                </span>
-                                <span>
-                                    SIGN IN
-                                </span>
-                                <b>→</b>
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    closeMobileMenu();
-                                    logout();
-                                }}
-                                className="mobile-nav-link"
-                            >
                                 <span className="mobile-nav-number">
                                     09
                                 </span>
-                                <span>
-                                    LOGOUT
-                                </span>
-                                <b>→</b>
-                            </button>
 
-                            <button
-                                type="button"
-                                onClick={
-                                    openSearch
-                                }
-                                className="mobile-nav-link"
-                            >
-                                <span className="mobile-nav-number">
-                                    10
-                                </span>
                                 <span>
                                     SEARCH
                                 </span>
+
                                 <b>→</b>
+
                             </button>
 
+
                         </div>
+
 
                         <div className="mobile-sidebar-footer">
 
@@ -857,9 +1034,13 @@ const Navbar = () => {
                     </aside>
 
                 </div>
+
             )}
+
         </>
     );
 };
 
+
 export default Navbar;
+
