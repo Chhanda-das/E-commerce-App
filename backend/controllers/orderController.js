@@ -5,7 +5,6 @@ import crypto from "crypto";
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 
-
 // ==========================================
 // STRIPE
 // ==========================================
@@ -21,7 +20,6 @@ console.log(
         : "NOT LOADED"
 );
 
-
 // ==========================================
 // RAZORPAY
 // ==========================================
@@ -31,22 +29,18 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-
 // ==========================================
 // HELPER
 // GET USER ID
 // ==========================================
 
 const getUserId = (req) => {
-
     return (
         req.userId ||
         req.body?.userId ||
         req.body?.user_id
     );
-
 };
-
 
 // ==========================================
 // HELPER
@@ -61,49 +55,27 @@ const createOrderData = ({
     paymentMethod,
     payment,
 }) => {
-
     return {
         userId: String(userId),
-
-        items: items,
-
+        items,
         amount: Number(amount),
-
-        address: address,
-
-        paymentMethod: paymentMethod,
-
+        address,
+        paymentMethod,
         payment: Boolean(payment),
-
         date: Date.now(),
     };
-
 };
 
-
 // ==========================================
-// PLACE ORDER - COD
+// PLACE ORDER - CASH ON DELIVERY
 // ==========================================
 
 const placeOrder = async (req, res) => {
-
     try {
-
         console.log("");
         console.log("==============================");
         console.log("PLACE COD ORDER");
         console.log("==============================");
-
-        console.log(
-            "BODY:",
-            req.body
-        );
-
-        console.log(
-            "USER ID FROM AUTH:",
-            req.userId
-        );
-
 
         const userId = getUserId(req);
 
@@ -113,109 +85,103 @@ const placeOrder = async (req, res) => {
             address,
         } = req.body || {};
 
+        console.log(
+            "USER ID:",
+            userId
+        );
+
+        // ----------------------------------
+        // VALIDATE USER
+        // ----------------------------------
 
         if (!userId) {
-
             return res.status(401).json({
-
                 success: false,
-
                 message:
                     "User ID missing. Please login again.",
-
             });
-
         }
 
+        // ----------------------------------
+        // VALIDATE ITEMS
+        // ----------------------------------
 
         if (
-            !items ||
             !Array.isArray(items) ||
             items.length === 0
         ) {
-
-            return res.json({
-
+            return res.status(400).json({
                 success: false,
-
                 message:
                     "Order items are required",
-
             });
-
         }
 
+        // ----------------------------------
+        // VALIDATE AMOUNT
+        // ----------------------------------
 
         if (
             amount === undefined ||
             amount === null ||
-            isNaN(Number(amount))
+            isNaN(Number(amount)) ||
+            Number(amount) <= 0
         ) {
-
-            return res.json({
-
+            return res.status(400).json({
                 success: false,
-
                 message:
-                    "Order amount is required",
-
+                    "Valid order amount is required",
             });
-
         }
 
+        // ----------------------------------
+        // VALIDATE ADDRESS
+        // ----------------------------------
 
         if (
             !address ||
             typeof address !== "object"
         ) {
-
-            return res.json({
-
+            return res.status(400).json({
                 success: false,
-
                 message:
                     "Delivery address is required",
-
             });
-
         }
 
+        // ----------------------------------
+        // COD IS NOT PAID YET
+        // ----------------------------------
 
         const orderData =
             createOrderData({
-
                 userId,
-
                 items,
-
                 amount,
-
                 address,
-
-                paymentMethod:
-                    "COD",
-
+                paymentMethod: "COD",
                 payment: false,
-
             });
-
 
         console.log(
             "FINAL COD ORDER DATA:",
             orderData
         );
 
-
         const order =
-            new orderModel(
-                orderData
-            );
-
+            new orderModel(orderData);
 
         await order.save();
 
+        console.log(
+            "COD ORDER CREATED:",
+            order._id
+        );
 
-        // Clear user's cart
+        // ----------------------------------
+        // CLEAR CART
+        // ----------------------------------
+
         await userModel.findByIdAndUpdate(
             userId,
             {
@@ -223,55 +189,43 @@ const placeOrder = async (req, res) => {
             }
         );
 
+        // ----------------------------------
+        // RESPONSE
+        // ----------------------------------
 
         return res.json({
-
             success: true,
-
             message:
                 "Order placed successfully",
-
             orderId:
                 order._id,
-
         });
 
-
     } catch (error) {
-
         console.log(
-            "PLACE ORDER ERROR:",
+            "PLACE COD ORDER ERROR:",
             error
         );
 
-
-        return res.json({
-
+        return res.status(500).json({
             success: false,
-
             message:
-                error.message,
-
+                error.message ||
+                "Failed to place COD order",
         });
-
     }
-
 };
-
 
 // ==========================================
 // STRIPE - CREATE PAYMENT
 // ==========================================
 
 const placeOrderStripe = async (req, res) => {
-
     try {
-
         console.log("");
         console.log("==============================");
         console.log("CREATE STRIPE PAYMENT");
         console.log("==============================");
-
 
         const userId = getUserId(req);
 
@@ -281,82 +235,115 @@ const placeOrderStripe = async (req, res) => {
             address,
         } = req.body || {};
 
+        // ----------------------------------
+        // VALIDATE USER
+        // ----------------------------------
 
         if (!userId) {
-
             return res.status(401).json({
-
                 success: false,
-
                 message:
                     "User ID missing. Please login again.",
-
             });
-
         }
 
+        // ----------------------------------
+        // VALIDATE ITEMS
+        // ----------------------------------
 
         if (
-            !items ||
             !Array.isArray(items) ||
             items.length === 0
         ) {
-
-            return res.json({
-
+            return res.status(400).json({
                 success: false,
-
                 message:
                     "Order items are required",
-
             });
-
         }
 
+        // ----------------------------------
+        // VALIDATE AMOUNT
+        // ----------------------------------
 
         if (
             amount === undefined ||
             amount === null ||
-            isNaN(Number(amount))
+            isNaN(Number(amount)) ||
+            Number(amount) <= 0
         ) {
-
-            return res.json({
-
+            return res.status(400).json({
                 success: false,
-
                 message:
-                    "Order amount is required",
-
+                    "Valid order amount is required",
             });
-
         }
 
+        // ----------------------------------
+        // VALIDATE ADDRESS
+        // ----------------------------------
 
-        if (!address) {
-
-            return res.json({
-
+        if (
+            !address ||
+            typeof address !== "object"
+        ) {
+            return res.status(400).json({
                 success: false,
-
                 message:
                     "Delivery address is required",
-
             });
-
         }
 
+        // ----------------------------------
+        // CREATE DATABASE ORDER FIRST
+        // ----------------------------------
 
-        // Stripe expects smallest currency unit
+        const orderData =
+            createOrderData({
+                userId,
+                items,
+                amount,
+                address,
+                paymentMethod: "Stripe",
+                payment: false,
+            });
+
+        const order =
+            new orderModel(orderData);
+
+        await order.save();
+
+        console.log(
+            "STRIPE MONGODB ORDER CREATED:",
+            order._id
+        );
+
+        // ----------------------------------
+        // STRIPE AMOUNT
+        // INR × 100
+        // ----------------------------------
+
         const stripeAmount =
             Math.round(
                 Number(amount) * 100
             );
 
+        // ----------------------------------
+        // FRONTEND URL
+        // ----------------------------------
 
         const frontendUrl =
             process.env.FRONTEND_URL ||
             "http://localhost:5173";
 
+        console.log(
+            "STRIPE FRONTEND URL:",
+            frontendUrl
+        );
+
+        // ----------------------------------
+        // CREATE STRIPE SESSION
+        // ----------------------------------
 
         const session =
             await stripe.checkout.sessions.create({
@@ -366,74 +353,57 @@ const placeOrderStripe = async (req, res) => {
                 ],
 
                 line_items: [
-
                     {
                         price_data: {
-
-                            currency:
-                                "inr",
+                            currency: "inr",
 
                             product_data: {
-
                                 name:
                                     "E-commerce Order",
-
                             },
 
                             unit_amount:
                                 stripeAmount,
-
                         },
 
                         quantity: 1,
-
                     },
-
                 ],
 
-                mode:
-                    "payment",
+                mode: "payment",
+
+                // IMPORTANT
+                // Store MongoDB order ID
+                metadata: {
+                    orderId:
+                        String(order._id),
+                },
+
+                client_reference_id:
+                    String(order._id),
 
                 success_url:
                     `${frontendUrl}/verify?success=true&session_id={CHECKOUT_SESSION_ID}`,
 
                 cancel_url:
                     `${frontendUrl}/place-order?canceled=true`,
-
             });
 
+        console.log(
+            "STRIPE SESSION CREATED:",
+            session.id
+        );
 
-        // Save pending order
-        const orderData =
-            createOrderData({
+        console.log(
+            "STRIPE ORDER ID:",
+            String(order._id)
+        );
 
-                userId,
-
-                items,
-
-                amount,
-
-                address,
-
-                paymentMethod:
-                    "Stripe",
-
-                payment: false,
-
-            });
-
-
-        const order =
-            new orderModel(
-                orderData
-            );
-
-
-        await order.save();
-
+        // ----------------------------------
+        // RESPONSE
+        // ----------------------------------
 
         return res.json({
-
             success: true,
 
             session_url:
@@ -444,31 +414,22 @@ const placeOrderStripe = async (req, res) => {
 
             orderId:
                 order._id,
-
         });
 
-
     } catch (error) {
-
         console.log(
             "STRIPE ORDER ERROR:",
             error
         );
 
-
-        return res.json({
-
+        return res.status(500).json({
             success: false,
-
             message:
-                error.message,
-
+                error.message ||
+                "Stripe payment creation failed",
         });
-
     }
-
 };
-
 
 // ==========================================
 // VERIFY STRIPE PAYMENT
@@ -484,87 +445,136 @@ const verifyStripePayment =
                 orderId,
             } = req.body || {};
 
+            // ----------------------------------
+            // VALIDATE SESSION
+            // ----------------------------------
 
             if (!sessionId) {
-
-                return res.json({
-
+                return res.status(400).json({
                     success: false,
-
                     message:
                         "Stripe session ID is required",
-
                 });
-
             }
 
+            // ----------------------------------
+            // GET STRIPE SESSION
+            // ----------------------------------
 
             const session =
                 await stripe.checkout.sessions.retrieve(
                     sessionId
                 );
 
+            console.log(
+                "STRIPE SESSION ID:",
+                session.id
+            );
+
+            console.log(
+                "STRIPE PAYMENT STATUS:",
+                session.payment_status
+            );
+
+            console.log(
+                "STRIPE METADATA ORDER ID:",
+                session.metadata?.orderId
+            );
+
+            // ----------------------------------
+            // PAYMENT MUST BE PAID
+            // ----------------------------------
 
             if (
                 session.payment_status !==
                 "paid"
             ) {
-
-                return res.json({
-
+                return res.status(400).json({
                     success: false,
-
                     message:
                         "Payment not completed",
-
                 });
-
             }
 
+            // ----------------------------------
+            // GET ORDER ID
+            // ----------------------------------
 
-            if (orderId) {
+            const finalOrderId =
+                orderId ||
+                session.metadata?.orderId ||
+                session.client_reference_id;
 
+            console.log(
+                "FINAL STRIPE ORDER ID:",
+                finalOrderId
+            );
+
+            if (!finalOrderId) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Order ID not found",
+                });
+            }
+
+            // ----------------------------------
+            // MARK ORDER AS PAID
+            // ----------------------------------
+
+            const updatedOrder =
                 await orderModel.findByIdAndUpdate(
 
-                    orderId,
+                    finalOrderId,
 
                     {
                         payment: true,
+                    },
+
+                    {
+                        new: true,
                     }
 
                 );
 
+            if (!updatedOrder) {
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Order not found",
+                });
             }
 
+            console.log(
+                "STRIPE ORDER MARKED PAID:",
+                updatedOrder._id
+            );
+
+            // ----------------------------------
+            // CLEAR CART
+            // ----------------------------------
 
             const userId =
                 getUserId(req);
 
-
             if (userId) {
-
                 await userModel.findByIdAndUpdate(
-
                     userId,
-
                     {
                         cartData: {},
                     }
-
                 );
-
             }
 
+            // ----------------------------------
+            // SUCCESS
+            // ----------------------------------
 
             return res.json({
-
                 success: true,
-
                 message:
                     "Payment verified successfully",
-
             });
-
 
         } catch (error) {
 
@@ -573,20 +583,14 @@ const verifyStripePayment =
                 error
             );
 
-
-            return res.json({
-
+            return res.status(500).json({
                 success: false,
-
                 message:
-                    error.message,
-
+                    error.message ||
+                    "Stripe payment verification failed",
             });
-
         }
-
     };
-
 
 // ==========================================
 // RAZORPAY - CREATE ORDER
@@ -602,21 +606,8 @@ const placeOrderRazorpay =
             console.log("CREATE RAZORPAY ORDER");
             console.log("==============================");
 
-
-            console.log(
-                "RAZORPAY BODY:",
-                req.body
-            );
-
-            console.log(
-                "AUTH USER ID:",
-                req.userId
-            );
-
-
             const userId =
                 getUserId(req);
-
 
             const {
                 items,
@@ -624,46 +615,32 @@ const placeOrderRazorpay =
                 address,
             } = req.body || {};
 
-
             // ----------------------------------
             // VALIDATE USER
             // ----------------------------------
 
             if (!userId) {
-
                 return res.status(401).json({
-
                     success: false,
-
                     message:
                         "User ID missing. Please login again.",
-
                 });
-
             }
-
 
             // ----------------------------------
             // VALIDATE ITEMS
             // ----------------------------------
 
             if (
-                !items ||
                 !Array.isArray(items) ||
                 items.length === 0
             ) {
-
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Order items are required",
-
                 });
-
             }
-
 
             // ----------------------------------
             // VALIDATE AMOUNT
@@ -675,18 +652,12 @@ const placeOrderRazorpay =
                 isNaN(Number(amount)) ||
                 Number(amount) <= 0
             ) {
-
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Valid order amount is required",
-
                 });
-
             }
-
 
             // ----------------------------------
             // VALIDATE ADDRESS
@@ -696,22 +667,15 @@ const placeOrderRazorpay =
                 !address ||
                 typeof address !== "object"
             ) {
-
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Delivery address is required",
-
                 });
-
             }
 
-
             // ----------------------------------
-            // RAZORPAY AMOUNT
-            // INR × 100
+            // CONVERT INR TO PAISE
             // ----------------------------------
 
             const razorpayAmount =
@@ -719,12 +683,34 @@ const placeOrderRazorpay =
                     Number(amount) * 100
                 );
 
-
             console.log(
                 "RAZORPAY AMOUNT:",
                 razorpayAmount
             );
 
+            // ----------------------------------
+            // CREATE MONGODB ORDER
+            // ----------------------------------
+
+            const orderData =
+                createOrderData({
+                    userId,
+                    items,
+                    amount,
+                    address,
+                    paymentMethod: "Razorpay",
+                    payment: false,
+                });
+
+            const order =
+                new orderModel(orderData);
+
+            await order.save();
+
+            console.log(
+                "RAZORPAY MONGODB ORDER CREATED:",
+                order._id
+            );
 
             // ----------------------------------
             // CREATE RAZORPAY ORDER
@@ -744,63 +730,16 @@ const placeOrderRazorpay =
 
                 });
 
-
             console.log(
                 "RAZORPAY ORDER CREATED:",
                 razorpayOrder.id
             );
 
-
             // ----------------------------------
-            // SAVE ORDER IN MONGODB
-            // ----------------------------------
-
-            const orderData =
-                createOrderData({
-
-                    userId,
-
-                    items,
-
-                    amount,
-
-                    address,
-
-                    paymentMethod:
-                        "Razorpay",
-
-                    payment: false,
-
-                });
-
-
-            console.log(
-                "FINAL RAZORPAY ORDER DATA:",
-                orderData
-            );
-
-
-            const order =
-                new orderModel(
-                    orderData
-                );
-
-
-            await order.save();
-
-
-            console.log(
-                "MONGODB ORDER CREATED:",
-                order._id
-            );
-
-
-            // ----------------------------------
-            // RESPONSE TO FRONTEND
+            // RESPONSE
             // ----------------------------------
 
             return res.json({
-
                 success: true,
 
                 message:
@@ -820,9 +759,7 @@ const placeOrderRazorpay =
 
                 key:
                     process.env.RAZORPAY_KEY_ID,
-
             });
-
 
         } catch (error) {
 
@@ -831,20 +768,14 @@ const placeOrderRazorpay =
                 error
             );
 
-
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    error.message,
-
+                    error.message ||
+                    "Razorpay order creation failed",
             });
-
         }
-
     };
-
 
 // ==========================================
 // VERIFY RAZORPAY PAYMENT
@@ -860,7 +791,6 @@ const verifyRazorpay =
             console.log("VERIFY RAZORPAY PAYMENT");
             console.log("==============================");
 
-
             const {
                 razorpay_order_id,
                 razorpay_payment_id,
@@ -868,24 +798,33 @@ const verifyRazorpay =
                 orderId,
             } = req.body || {};
 
+            // ----------------------------------
+            // VALIDATE PAYMENT DATA
+            // ----------------------------------
 
             if (
                 !razorpay_order_id ||
                 !razorpay_payment_id ||
                 !razorpay_signature
             ) {
-
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Razorpay payment details are missing",
-
                 });
-
             }
 
+            // ----------------------------------
+            // ORDER ID REQUIRED
+            // ----------------------------------
+
+            if (!orderId) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "MongoDB order ID is required",
+                });
+            }
 
             // ----------------------------------
             // CREATE SIGNATURE
@@ -902,65 +841,56 @@ const verifyRazorpay =
                     )
                     .digest("hex");
 
-
             // ----------------------------------
-            // CHECK SIGNATURE
+            // VERIFY SIGNATURE
             // ----------------------------------
 
             if (
                 generatedSignature !==
                 razorpay_signature
             ) {
-
                 return res.status(400).json({
-
                     success: false,
-
                     message:
                         "Invalid Razorpay payment signature",
-
                 });
-
             }
 
+            console.log(
+                "RAZORPAY SIGNATURE VERIFIED"
+            );
 
             // ----------------------------------
-            // UPDATE ORDER
+            // MARK ORDER AS PAID
             // ----------------------------------
 
-            if (orderId) {
+            const updatedOrder =
+                await orderModel.findByIdAndUpdate(
 
-                const updatedOrder =
-                    await orderModel.findByIdAndUpdate(
+                    orderId,
 
-                        orderId,
+                    {
+                        payment: true,
+                    },
 
-                        {
-                            payment: true,
-                        },
+                    {
+                        new: true,
+                    }
 
-                        {
-                            new: true,
-                        }
+                );
 
-                    );
-
-
-                if (!updatedOrder) {
-
-                    return res.status(404).json({
-
-                        success: false,
-
-                        message:
-                            "Order not found",
-
-                    });
-
-                }
-
+            if (!updatedOrder) {
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Order not found",
+                });
             }
 
+            console.log(
+                "RAZORPAY ORDER MARKED PAID:",
+                updatedOrder._id
+            );
 
             // ----------------------------------
             // CLEAR CART
@@ -969,31 +899,24 @@ const verifyRazorpay =
             const userId =
                 getUserId(req);
 
-
             if (userId) {
-
                 await userModel.findByIdAndUpdate(
-
                     userId,
-
                     {
                         cartData: {},
                     }
-
                 );
-
             }
 
+            // ----------------------------------
+            // SUCCESS
+            // ----------------------------------
 
             return res.json({
-
                 success: true,
-
                 message:
                     "Razorpay payment verified successfully",
-
             });
-
 
         } catch (error) {
 
@@ -1002,206 +925,172 @@ const verifyRazorpay =
                 error
             );
 
-
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    error.message,
-
+                    error.message ||
+                    "Razorpay payment verification failed",
             });
-
         }
-
     };
-
 
 // ==========================================
 // ADMIN - ALL ORDERS
 // ==========================================
 
-const allOrders = async (req, res) => {
+const allOrders =
+    async (req, res) => {
 
-    try {
+        try {
 
-        const orders =
-            await orderModel
-                .find({})
-                .sort({
-                    date: -1,
-                });
+            const orders =
+                await orderModel
+                    .find({})
+                    .sort({
+                        date: -1,
+                    });
 
+            return res.json({
+                success: true,
+                orders,
+            });
 
-        return res.json({
+        } catch (error) {
 
-            success: true,
+            console.log(
+                "ALL ORDERS ERROR:",
+                error
+            );
 
-            orders,
-
-        });
-
-
-    } catch (error) {
-
-        console.log(
-            "ALL ORDERS ERROR:",
-            error
-        );
-
-
-        return res.json({
-
-            success: false,
-
-            message:
-                error.message,
-
-        });
-
-    }
-
-};
-
+            return res.status(500).json({
+                success: false,
+                message:
+                    error.message ||
+                    "Failed to get orders",
+            });
+        }
+    };
 
 // ==========================================
 // USER ORDERS
 // ==========================================
 
-const userOrders = async (req, res) => {
+const userOrders =
+    async (req, res) => {
 
-    try {
+        try {
 
-        const userId =
-            getUserId(req);
+            const userId =
+                getUserId(req);
 
-
-        if (!userId) {
-
-            return res.status(401).json({
-
-                success: false,
-
-                message:
-                    "User ID missing. Please login again.",
-
-            });
-
-        }
-
-
-        const orders =
-            await orderModel
-                .find({
-                    userId:
-                        String(userId),
-                })
-                .sort({
-                    date: -1,
+            if (!userId) {
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "User ID missing. Please login again.",
                 });
-
-
-        return res.json({
-
-            success: true,
-
-            orders,
-
-        });
-
-
-    } catch (error) {
-
-        console.log(
-            "USER ORDERS ERROR:",
-            error
-        );
-
-
-        return res.json({
-
-            success: false,
-
-            message:
-                error.message,
-
-        });
-
-    }
-
-};
-
-
-// ==========================================
-// ADMIN - UPDATE STATUS
-// ==========================================
-
-const updateStatus = async (req, res) => {
-
-    try {
-
-        const {
-            orderId,
-            status,
-        } = req.body || {};
-
-
-        if (!orderId || !status) {
-
-            return res.json({
-
-                success: false,
-
-                message:
-                    "Order ID and status are required",
-
-            });
-
-        }
-
-
-        await orderModel.findByIdAndUpdate(
-
-            orderId,
-
-            {
-                status,
             }
 
-        );
+            const orders =
+                await orderModel
+                    .find({
+                        userId:
+                            String(userId),
+                    })
+                    .sort({
+                        date: -1,
+                    });
 
+            return res.json({
+                success: true,
+                orders,
+            });
 
-        return res.json({
+        } catch (error) {
 
-            success: true,
+            console.log(
+                "USER ORDERS ERROR:",
+                error
+            );
 
-            message:
-                "Order status updated",
+            return res.status(500).json({
+                success: false,
+                message:
+                    error.message ||
+                    "Failed to get user orders",
+            });
+        }
+    };
 
-        });
+// ==========================================
+// ADMIN - UPDATE ORDER STATUS
+// ==========================================
 
+const updateStatus =
+    async (req, res) => {
 
-    } catch (error) {
+        try {
 
-        console.log(
-            "UPDATE STATUS ERROR:",
-            error
-        );
+            const {
+                orderId,
+                status,
+            } = req.body || {};
 
+            if (
+                !orderId ||
+                !status
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Order ID and status are required",
+                });
+            }
 
-        return res.json({
+            const updatedOrder =
+                await orderModel.findByIdAndUpdate(
 
-            success: false,
+                    orderId,
 
-            message:
-                error.message,
+                    {
+                        status,
+                    },
 
-        });
+                    {
+                        new: true,
+                    }
 
-    }
+                );
 
-};
+            if (!updatedOrder) {
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Order not found",
+                });
+            }
 
+            return res.json({
+                success: true,
+                message:
+                    "Order status updated",
+            });
+
+        } catch (error) {
+
+            console.log(
+                "UPDATE STATUS ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    error.message ||
+                    "Failed to update order status",
+            });
+        }
+    };
 
 // ==========================================
 // EXPORT
