@@ -452,43 +452,26 @@ const AdminContextProvider = ({ children }) => {
     // ======================================================
 
     const logout = useCallback(() => {
+        console.log("LOGOUT START");
 
-        console.log(
-            "ADMIN LOGOUT"
-        );
+        // Clear browser token
+        localStorage.removeItem("adminToken");
 
+        // Clear session storage too, just in case
+        sessionStorage.removeItem("adminToken");
 
-        // --------------------------------------------------
-        // REMOVE TOKEN
-        // --------------------------------------------------
-
-        localStorage.removeItem(
-            "adminToken"
-        );
-
-
-        // --------------------------------------------------
-        // CLEAR ADMIN STATE
-        // --------------------------------------------------
-
+        // Clear React state
         setToken("");
-
         setProducts([]);
-
         setOrders([]);
 
-
-        // --------------------------------------------------
-        // MESSAGE
-        // --------------------------------------------------
-
-        toast.success(
-            "Logged out successfully"
+        console.log(
+            "TOKEN AFTER LOGOUT:",
+            localStorage.getItem("adminToken")
         );
 
-
+        toast.success("Logged out successfully");
     }, []);
-
 
     // ======================================================
     // ADD PRODUCT
