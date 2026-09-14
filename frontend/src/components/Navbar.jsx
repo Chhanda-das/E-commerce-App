@@ -30,7 +30,9 @@ const Navbar = () => {
     const [searchValue, setSearchValue] = useState("");
 
     // LOGIN STATE
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(
+        !!localStorage.getItem("token")
+    );
 
 
     // ==========================================
@@ -62,11 +64,17 @@ const Navbar = () => {
 
         checkLogin();
 
-        // Listen for login/logout changes
-        window.addEventListener("storage", checkLogin);
+        window.addEventListener(
+            "storage",
+            checkLogin
+        );
 
         return () => {
-            window.removeEventListener("storage", checkLogin);
+
+            window.removeEventListener(
+                "storage",
+                checkLogin
+            );
         };
 
     }, []);
@@ -236,16 +244,16 @@ const Navbar = () => {
                 setCartItems({});
             }
 
-            // Remove token
+            // Remove authentication token
             localStorage.removeItem("token");
 
-            // Update navbar immediately
+            // Immediately change Logout → Sign In
             setIsLoggedIn(false);
 
-            // Close profile menu
+            // Close menu
             setProfileOpen(false);
 
-            // Go to login page
+            // Redirect to login
             navigate("/login", {
                 replace: true
             });
@@ -311,13 +319,8 @@ const Navbar = () => {
                             to="/"
                             className={navLinkStyle}
                         >
-
-                            <span>
-                                HOME
-                            </span>
-
+                            <span>HOME</span>
                             <i></i>
-
                         </NavLink>
 
 
@@ -325,13 +328,10 @@ const Navbar = () => {
                             to="/collection"
                             className={navLinkStyle}
                         >
-
                             <span>
                                 COLLECTION
                             </span>
-
                             <i></i>
-
                         </NavLink>
 
 
@@ -339,13 +339,8 @@ const Navbar = () => {
                             to="/about"
                             className={navLinkStyle}
                         >
-
-                            <span>
-                                ABOUT
-                            </span>
-
+                            <span>ABOUT</span>
                             <i></i>
-
                         </NavLink>
 
 
@@ -353,13 +348,8 @@ const Navbar = () => {
                             to="/contact"
                             className={navLinkStyle}
                         >
-
-                            <span>
-                                CONTACT
-                            </span>
-
+                            <span>CONTACT</span>
                             <i></i>
-
                         </NavLink>
 
                     </nav>
@@ -492,7 +482,9 @@ const Navbar = () => {
                                 className="navbar-icon-button"
                                 onClick={toggleProfile}
                                 aria-label="Profile menu"
-                                aria-expanded={profileOpen}
+                                aria-expanded={
+                                    profileOpen
+                                }
                             >
 
                                 <img
@@ -520,74 +512,68 @@ const Navbar = () => {
                                     "
                                 >
 
-                                    {/* ==================================
-                                        LOGGED IN MENU
-                                    ================================== */}
+                                    {/* PROFILE - ALWAYS SHOW */}
+
+                                    <button
+                                        type="button"
+                                        onClick={goToProfile}
+                                        className="
+                                            w-full
+                                            text-left
+                                            px-5
+                                            py-3
+                                            text-sm
+                                            text-gray-800
+                                            hover:bg-gray-50
+                                        "
+                                    >
+                                        👤 Profile
+                                    </button>
+
+
+                                    {/* ORDERS - ALWAYS SHOW */}
+
+                                    <button
+                                        type="button"
+                                        onClick={goToOrders}
+                                        className="
+                                            w-full
+                                            text-left
+                                            px-5
+                                            py-3
+                                            text-sm
+                                            text-gray-800
+                                            hover:bg-gray-50
+                                        "
+                                    >
+                                        📦 My Orders
+                                    </button>
+
+
+                                    <div className="border-t border-gray-100"></div>
+
+
+                                    {/* ONLY SIGN IN OR LOGOUT */}
 
                                     {isLoggedIn ? (
 
-                                        <>
-
-                                            <button
-                                                type="button"
-                                                onClick={goToProfile}
-                                                className="
-                                                    w-full
-                                                    text-left
-                                                    px-5
-                                                    py-3
-                                                    text-sm
-                                                    text-gray-800
-                                                    hover:bg-gray-50
-                                                "
-                                            >
-                                                👤 Profile
-                                            </button>
-
-
-                                            <button
-                                                type="button"
-                                                onClick={goToOrders}
-                                                className="
-                                                    w-full
-                                                    text-left
-                                                    px-5
-                                                    py-3
-                                                    text-sm
-                                                    text-gray-800
-                                                    hover:bg-gray-50
-                                                "
-                                            >
-                                                📦 My Orders
-                                            </button>
-
-
-                                            <div className="border-t border-gray-100"></div>
-
-
-                                            <button
-                                                type="button"
-                                                onClick={logout}
-                                                className="
-                                                    w-full
-                                                    text-left
-                                                    px-5
-                                                    py-3
-                                                    text-sm
-                                                    text-red-600
-                                                    hover:bg-red-50
-                                                "
-                                            >
-                                                🚪 Logout
-                                            </button>
-
-                                        </>
+                                        <button
+                                            type="button"
+                                            onClick={logout}
+                                            className="
+                                                w-full
+                                                text-left
+                                                px-5
+                                                py-3
+                                                text-sm
+                                                text-red-600
+                                                hover:bg-red-50
+                                            "
+                                        >
+                                            🚪 Logout
+                                        </button>
 
                                     ) : (
-
-                                        /* ==================================
-                                            LOGGED OUT MENU
-                                        ================================== */
 
                                         <button
                                             type="button"
@@ -897,80 +883,78 @@ const Navbar = () => {
                             </NavLink>
 
 
-                            {/* ==================================
-                                MOBILE AUTH MENU
-                            ================================== */}
+                            {/* PROFILE - ALWAYS SHOW */}
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    closeMobileMenu();
+                                    navigate("/profile");
+                                }}
+                                className="mobile-nav-link"
+                            >
+
+                                <span className="mobile-nav-number">
+                                    06
+                                </span>
+
+                                <span>
+                                    PROFILE
+                                </span>
+
+                                <b>→</b>
+
+                            </button>
+
+
+                            {/* MY ORDERS - ALWAYS SHOW */}
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    closeMobileMenu();
+                                    navigate("/orders");
+                                }}
+                                className="mobile-nav-link"
+                            >
+
+                                <span className="mobile-nav-number">
+                                    07
+                                </span>
+
+                                <span>
+                                    MY ORDERS
+                                </span>
+
+                                <b>→</b>
+
+                            </button>
+
+
+                            {/* ONLY SIGN IN OR LOGOUT */}
 
                             {isLoggedIn ? (
 
-                                <>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        closeMobileMenu();
+                                        logout();
+                                    }}
+                                    className="mobile-nav-link"
+                                >
 
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            closeMobileMenu();
-                                            navigate("/profile");
-                                        }}
-                                        className="mobile-nav-link"
-                                    >
+                                    <span className="mobile-nav-number">
+                                        08
+                                    </span>
 
-                                        <span className="mobile-nav-number">
-                                            06
-                                        </span>
+                                    <span>
+                                        LOGOUT
+                                    </span>
 
-                                        <span>
-                                            PROFILE
-                                        </span>
+                                    <b>→</b>
 
-                                        <b>→</b>
-
-                                    </button>
-
-
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            closeMobileMenu();
-                                            navigate("/orders");
-                                        }}
-                                        className="mobile-nav-link"
-                                    >
-
-                                        <span className="mobile-nav-number">
-                                            07
-                                        </span>
-
-                                        <span>
-                                            MY ORDERS
-                                        </span>
-
-                                        <b>→</b>
-
-                                    </button>
-
-
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            closeMobileMenu();
-                                            logout();
-                                        }}
-                                        className="mobile-nav-link"
-                                    >
-
-                                        <span className="mobile-nav-number">
-                                            08
-                                        </span>
-
-                                        <span>
-                                            LOGOUT
-                                        </span>
-
-                                        <b>→</b>
-
-                                    </button>
-
-                                </>
+                                </button>
 
                             ) : (
 
@@ -984,7 +968,7 @@ const Navbar = () => {
                                 >
 
                                     <span className="mobile-nav-number">
-                                        06
+                                        08
                                     </span>
 
                                     <span>
@@ -997,6 +981,8 @@ const Navbar = () => {
 
                             )}
 
+
+                            {/* SEARCH */}
 
                             <button
                                 type="button"
