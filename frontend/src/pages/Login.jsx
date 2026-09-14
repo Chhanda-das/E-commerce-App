@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,26 +12,20 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [showPassword, setShowPassword] =
-        useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    const [loading, setLoading] =
-        useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const [error, setError] =
-        useState("");
+    const [error, setError] = useState("");
 
-    const [success, setSuccess] =
-        useState("");
+    const [success, setSuccess] = useState("");
 
     // ==========================================
     // EMAIL VALIDATION
     // ==========================================
 
     const validateEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-            email
-        );
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
     // ==========================================
@@ -85,9 +80,7 @@ const Login = () => {
         // ------------------------------------------
 
         if (!validateEmail(email.trim())) {
-            setError(
-                "Please enter a valid email address."
-            );
+            setError("Please enter a valid email address.");
             return;
         }
 
@@ -96,9 +89,7 @@ const Login = () => {
         // ------------------------------------------
 
         if (!password) {
-            setError(
-                "Please enter your password."
-            );
+            setError("Please enter your password.");
             return;
         }
 
@@ -106,8 +97,7 @@ const Login = () => {
         // PASSWORD STRENGTH
         // ------------------------------------------
 
-        const passwordError =
-            validatePassword(password);
+        const passwordError = validatePassword(password);
 
         if (passwordError) {
             setError(passwordError);
@@ -122,35 +112,24 @@ const Login = () => {
             setLoading(true);
 
             console.log("");
-            console.log(
-                "================================"
-            );
+            console.log("================================");
             console.log("USER LOGIN");
-            console.log(
-                "================================"
+            console.log("================================");
+
+            console.log("EMAIL:", email.trim());
+
+            const response = await axios.post(
+                `${backendUrl}/api/user/login`,
+                {
+                    email: email.trim(),
+                    password,
+                },
+                {
+                    withCredentials: true,
+                }
             );
 
-            console.log(
-                "EMAIL:",
-                email.trim()
-            );
-
-            const response =
-                await axios.post(
-                    `${backendUrl}/api/user/login`,
-                    {
-                        email: email.trim(),
-                        password,
-                    },
-                    {
-                        withCredentials: true,
-                    }
-                );
-
-            console.log(
-                "LOGIN RESPONSE:",
-                response.data
-            );
+            console.log("LOGIN RESPONSE:", response.data);
 
             // ------------------------------------------
             // LOGIN FAILED
@@ -159,7 +138,7 @@ const Login = () => {
             if (!response.data.success) {
                 setError(
                     response.data.message ||
-                    "Login failed."
+                        "Login failed."
                 );
 
                 return;
@@ -178,15 +157,23 @@ const Login = () => {
                 console.log(
                     "TOKEN SAVED TO LOCAL STORAGE"
                 );
+
+                // IMPORTANT:
+                // Notify Navbar immediately
+                window.dispatchEvent(
+                    new Event("authChanged")
+                );
+            } else {
+                console.warn(
+                    "LOGIN SUCCESS BUT NO TOKEN RETURNED"
+                );
             }
 
             // ------------------------------------------
             // SUCCESS
             // ------------------------------------------
 
-            setSuccess(
-                "Login successful."
-            );
+            setSuccess("Login successful.");
 
             // ------------------------------------------
             // GO HOME
@@ -197,15 +184,12 @@ const Login = () => {
             }, 700);
 
         } catch (err) {
-            console.error(
-                "LOGIN ERROR:",
-                err
-            );
+            console.error("LOGIN ERROR:", err);
 
             if (err.response) {
                 setError(
                     err.response.data?.message ||
-                    "Login failed."
+                        "Login failed."
                 );
             } else {
                 setError(
@@ -431,8 +415,7 @@ const Login = () => {
 
                                     <span
                                         className={
-                                            password.length >=
-                                                8
+                                            password.length >= 8
                                                 ? passwordStrength.className
                                                 : ""
                                         }
@@ -492,8 +475,7 @@ const Login = () => {
 
                         <div
                             className={
-                                password.length >=
-                                    8
+                                password.length >= 8
                                     ? "rule valid"
                                     : "rule"
                             }
@@ -504,9 +486,7 @@ const Login = () => {
 
                         <div
                             className={
-                                /[A-Z]/.test(
-                                    password
-                                )
+                                /[A-Z]/.test(password)
                                     ? "rule valid"
                                     : "rule"
                             }
@@ -517,9 +497,7 @@ const Login = () => {
 
                         <div
                             className={
-                                /[a-z]/.test(
-                                    password
-                                )
+                                /[a-z]/.test(password)
                                     ? "rule valid"
                                     : "rule"
                             }
@@ -530,9 +508,7 @@ const Login = () => {
 
                         <div
                             className={
-                                /[0-9]/.test(
-                                    password
-                                )
+                                /[0-9]/.test(password)
                                     ? "rule valid"
                                     : "rule"
                             }
@@ -605,3 +581,4 @@ const Login = () => {
 };
 
 export default Login;
+
